@@ -1,5 +1,6 @@
 package com.shyam.currencyconverter.presentation.viewmodel
 
+import androidx.lifecycle.MutableLiveData
 import com.shyam.currencyconverter.data.repository.source.local.database.DatabaseService
 import com.shyam.currencyconverter.data.repository.source.remote.network.NetworkService
 import com.shyam.currencyconverter.presentation.view.base.BaseViewModel
@@ -10,7 +11,10 @@ class MainViewModel(
     private val databaseService: DatabaseService,
     private val networkService: NetworkService
 ) : BaseViewModel(networkHelper = networkHelper) {
+
+    val testData = MutableLiveData<String>()
+
     override fun onCreate() {
-        TODO("Not yet implemented")
+        testData.postValue("Hello from MainViewModel")
     }
 }

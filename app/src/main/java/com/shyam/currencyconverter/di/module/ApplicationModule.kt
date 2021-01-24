@@ -1,7 +1,7 @@
 package com.shyam.currencyconverter.di.module
 
 import android.content.Context
-import com.shyam.currencyconverter.MyApplication
+import com.shyam.currencyconverter.CurrencyConverterApplication
 import com.shyam.currencyconverter.di.component.ApplicationContext
 import com.shyam.currencyconverter.di.component.DatabaseInfo
 import com.shyam.currencyconverter.di.component.NetworkInfo
@@ -11,7 +11,7 @@ import dagger.Provides
 
 
 @Module
-class ApplicationModule(private val application: MyApplication) {
+class ApplicationModule(private val application: CurrencyConverterApplication) {
 
     @ApplicationContext
     @Provides

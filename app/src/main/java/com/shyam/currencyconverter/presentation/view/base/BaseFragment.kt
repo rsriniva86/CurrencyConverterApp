@@ -8,7 +8,7 @@ import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import com.shyam.currencyconverter.MyApplication
+import com.shyam.currencyconverter.CurrencyConverterApplication
 import com.shyam.currencyconverter.di.component.DaggerFragmentComponent
 import com.shyam.currencyconverter.di.component.FragmentComponent
 import com.shyam.currencyconverter.di.module.FragmentModule
@@ -33,7 +33,7 @@ abstract class BaseFragment<VM : BaseViewModel> : Fragment() {
     private fun buildFragmentComponent() =
             DaggerFragmentComponent
                     .builder()
-                    .applicationComponent((context!!.applicationContext as MyApplication).applicationComponent)
+                    .applicationComponent((context!!.applicationContext as CurrencyConverterApplication).applicationComponent)
                     .fragmentModule(FragmentModule(this))
                     .build()
 

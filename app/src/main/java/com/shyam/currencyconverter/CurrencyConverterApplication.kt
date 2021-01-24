@@ -9,7 +9,7 @@ import com.shyam.currencyconverter.di.component.DaggerApplicationComponent
 import com.shyam.currencyconverter.di.module.ApplicationModule
 import javax.inject.Inject
 
-class MyApplication : Application() {
+class CurrencyConverterApplication : Application() {
 
     lateinit var applicationComponent: ApplicationComponent
 

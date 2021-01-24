@@ -1,31 +1,46 @@
 package com.shyam.currencyconverter.presentation.view
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import com.shyam.currencyconverter.R
+import com.shyam.currencyconverter.di.component.FragmentComponent
+import com.shyam.currencyconverter.presentation.view.base.BaseFragment
 import com.shyam.currencyconverter.presentation.viewmodel.MainViewModel
+import kotlinx.android.synthetic.main.main_fragment.*
 
-class MainFragment : Fragment() {
+
+class MainFragment : BaseFragment<MainViewModel>() {
 
     companion object {
-        fun newInstance() = MainFragment()
+
+        val TAG = "MainFragment"
+
+        fun newInstance(): MainFragment {
+            val args = Bundle()
+            val fragment = MainFragment()
+            fragment.arguments = args
+            return fragment
+        }
     }
 
-    private lateinit var viewModel: MainViewModel
+    override fun provideLayoutId(): Int = R.layout.main_fragment
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
-        return inflater.inflate(R.layout.main_fragment, container, false)
+    override fun injectDependencies(fragmentComponent: FragmentComponent) =
+        fragmentComponent.inject(this)
+
+//    override fun injectDependencies(fragmentComponent: FragmentComponent){
+//
+//    }
+    override fun setupView(view: View) {
+
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-        // TODO: Use the ViewModel
+    override fun setupObservers() {
+        super.setupObservers()
+        viewModel.testData.observe(this, Observer {
+            println(it)
+        })
     }
 
 }

@@ -6,7 +6,7 @@ import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import com.shyam.currencyconverter.MyApplication
+import com.shyam.currencyconverter.CurrencyConverterApplication
 import com.shyam.currencyconverter.di.component.ActivityComponent
 import com.shyam.currencyconverter.di.component.DaggerActivityComponent
 import com.shyam.currencyconverter.di.module.ActivityModule
@@ -33,7 +33,7 @@ abstract class BaseActivity<VM : BaseViewModel> : AppCompatActivity() {
     private fun buildActivityComponent() =
             DaggerActivityComponent
                     .builder()
-                    .applicationComponent((application as MyApplication).applicationComponent)
+                    .applicationComponent((application as CurrencyConverterApplication).applicationComponent)
                     .activityModule(ActivityModule(this))
                     .build()
 
