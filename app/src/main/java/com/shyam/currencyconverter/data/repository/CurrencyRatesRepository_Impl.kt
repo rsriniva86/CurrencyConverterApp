@@ -64,7 +64,7 @@ class CurrencyRatesRepository_Impl(
                 throw Exception(response.message)
             }
         }catch (ex: Exception){
-            ex?.message?.let{
+            ex.message?.let{
                 return Result.error(it,null)
             }
             return Result.error("unknown exception",null)
@@ -90,7 +90,7 @@ class CurrencyRatesRepository_Impl(
                 throw Exception(response.message)
             }
         }catch (ex: Exception){
-            ex?.message?.let{
+            ex.message?.let{
                 return Result.error(it,null)
             }
             return Result.error("unknown exception",null)
