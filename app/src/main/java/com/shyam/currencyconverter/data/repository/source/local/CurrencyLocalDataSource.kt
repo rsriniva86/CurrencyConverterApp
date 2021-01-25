@@ -9,7 +9,8 @@ import com.shyam.currencyconverter.data.repository.source.Result.Companion.succe
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 
-class CurrencyLocalDataSource(private val appDatabase: CurrencyDatabase,
+
+class CurrencyLocalDataSource  constructor(private val appDatabase: CurrencyDatabase,
                               private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO): CurrencyDataSource {
 
     override suspend fun getCurrencyList(): Result<CurrencyList?> {

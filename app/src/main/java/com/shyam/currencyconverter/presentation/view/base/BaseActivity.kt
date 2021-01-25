@@ -6,11 +6,7 @@ import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import com.shyam.currencyconverter.CurrencyConverterApplication
-import com.shyam.currencyconverter.di.component.ActivityComponent
-import com.shyam.currencyconverter.di.component.DaggerActivityComponent
-import com.shyam.currencyconverter.di.module.ActivityModule
-import javax.inject.Inject
+
 
 /**
  * Reference for generics: https://kotlinlang.org/docs/reference/generics.html
@@ -18,11 +14,9 @@ import javax.inject.Inject
  */
 abstract class BaseActivity<VM : BaseViewModel> : AppCompatActivity() {
 
-    @Inject
     lateinit var viewModel: VM
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        injectDependencies(buildActivityComponent())
         super.onCreate(savedInstanceState)
         setContentView(provideLayoutId())
         setupObservers()
@@ -30,12 +24,7 @@ abstract class BaseActivity<VM : BaseViewModel> : AppCompatActivity() {
         viewModel.onCreate()
     }
 
-    private fun buildActivityComponent() =
-            DaggerActivityComponent
-                    .builder()
-                    .applicationComponent((application as CurrencyConverterApplication).applicationComponent)
-                    .activityModule(ActivityModule(this))
-                    .build()
+
 
     protected open fun setupObservers() {
         viewModel.messageString.observe(this, Observer {
@@ -61,8 +50,6 @@ abstract class BaseActivity<VM : BaseViewModel> : AppCompatActivity() {
 
     @LayoutRes
     protected abstract fun provideLayoutId(): Int
-
-    protected abstract fun injectDependencies(activityComponent: ActivityComponent)
 
     protected abstract fun setupView(savedInstanceState: Bundle?)
 }

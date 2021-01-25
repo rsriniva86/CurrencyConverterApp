@@ -6,11 +6,7 @@ import com.shyam.currencyconverter.data.repository.source.remote.network.Network
 import com.shyam.currencyconverter.presentation.view.base.BaseViewModel
 import com.shyam.currencyconverter.utils.NetworkHelper
 
-class MainViewModel(
-    networkHelper: NetworkHelper,
-    private val databaseService: DatabaseService,
-    private val networkService: NetworkService
-) : BaseViewModel(networkHelper = networkHelper) {
+class MainViewModel() : BaseViewModel() {
 
     val testData = MutableLiveData<String>()
 

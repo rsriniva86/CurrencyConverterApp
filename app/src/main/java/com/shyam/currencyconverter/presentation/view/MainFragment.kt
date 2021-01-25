@@ -3,15 +3,33 @@ package com.shyam.currencyconverter.presentation.view
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.shyam.currencyconverter.R
-import com.shyam.currencyconverter.di.component.FragmentComponent
 import com.shyam.currencyconverter.presentation.view.base.BaseFragment
 import com.shyam.currencyconverter.presentation.viewmodel.MainViewModel
-import kotlinx.android.synthetic.main.main_fragment.*
+
 
 
 class MainFragment : BaseFragment<MainViewModel>() {
 
+    override fun provideLayoutId(): Int = R.layout.main_fragment
+
+
+    override fun setupView(view: View) {
+
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        super.onCreate(savedInstanceState)
+    }
+
+    override fun setupObservers() {
+        super.setupObservers()
+        viewModel.testData.observe(viewLifecycleOwner, Observer {
+            println(it)
+        })
+    }
     companion object {
 
         val TAG = "MainFragment"
@@ -24,23 +42,5 @@ class MainFragment : BaseFragment<MainViewModel>() {
         }
     }
 
-    override fun provideLayoutId(): Int = R.layout.main_fragment
-
-    override fun injectDependencies(fragmentComponent: FragmentComponent) =
-        fragmentComponent.inject(this)
-
-//    override fun injectDependencies(fragmentComponent: FragmentComponent){
-//
-//    }
-    override fun setupView(view: View) {
-
-    }
-
-    override fun setupObservers() {
-        super.setupObservers()
-        viewModel.testData.observe(this, Observer {
-            println(it)
-        })
-    }
 
 }

@@ -7,7 +7,8 @@ import com.shyam.currencyconverter.data.repository.source.local.database.entitie
 import com.shyam.currencyconverter.data.repository.source.remote.CurrencyRemoteDataSource
 import java.lang.Exception
 
-class CurrencyRatesRepository_Impl(
+
+class CurrencyRatesRepositoryImpl  constructor(
     private val localDataSource: CurrencyLocalDataSource,
     private val remoteDataSource: CurrencyRemoteDataSource
 ): CurrencyRatesRepository {

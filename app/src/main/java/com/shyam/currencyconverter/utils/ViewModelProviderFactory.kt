@@ -2,7 +2,6 @@ package com.shyam.currencyconverter.utils
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import javax.inject.Singleton
 import kotlin.reflect.KClass
 
 /**
@@ -15,7 +14,6 @@ import kotlin.reflect.KClass
  * Example: T -> SplashViewModel,
  *
  */
-@Singleton
 class ViewModelProviderFactory<T : ViewModel>(
     private val kClass: KClass<T>, // KClass is the holder of class of type ViewModel that needs to be inject
     private val creator: () -> T // This is the Lambda function, this is provided be the ActivityModule/FragmentModule,
