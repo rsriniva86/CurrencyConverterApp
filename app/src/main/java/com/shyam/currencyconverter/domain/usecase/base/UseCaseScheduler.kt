@@ -22,7 +22,7 @@ class UseCaseScheduler private constructor() {
      * @param <T> Request data type
      * @param <V> Response data type
     </V></T> */
-    fun <T, V> execute(
+    suspend fun <T, V> execute(
         useCase: UseCase<UseCase.RequestValues, UseCase.ResponseValue>,
         request: UseCase.RequestValues,
         callback: UseCase.UseCaseCallback<UseCase.ResponseValue>
@@ -32,7 +32,8 @@ class UseCaseScheduler private constructor() {
                 handler,
                 callback
             )
-        getExecutor()!!.execute { useCase.executeUseCase(request) }
+        getExecutor()!!.execute {
+        }
     }
 
     /**

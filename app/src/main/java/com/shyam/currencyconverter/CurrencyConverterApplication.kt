@@ -2,14 +2,19 @@ package com.shyam.currencyconverter
 
 
 import android.app.Application
-import com.shyam.currencyconverter.data.repository.source.local.database.DatabaseService
-import com.shyam.currencyconverter.data.repository.source.remote.network.NetworkService
+import com.shyam.currencyconverter.data.repository.source.local.database.CurrencyDatabase
 
 
 class CurrencyConverterApplication : Application() {
 
-    lateinit var networkService: NetworkService
-    lateinit var databaseService: DatabaseService
+    companion object {
+        var databaseService: CurrencyDatabase?=null
+        fun getDatabase(): CurrencyDatabase? {
+            return databaseService
+        }
+
+    }
+
 
     override fun onCreate() {
         super.onCreate()
@@ -17,6 +22,6 @@ class CurrencyConverterApplication : Application() {
     }
 
     private fun getDependencies() {
-
+        databaseService= CurrencyDatabase.invoke(this)
     }
 }

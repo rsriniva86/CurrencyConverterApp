@@ -17,6 +17,6 @@ interface CurrencyLayerApiInterface {
             : Response<CurrencyRates>
 
     companion object{
-        const val BASE_URL="https://api.currencylayer.com"
+        const val BASE_URL="http://api.currencylayer.com"
     }
 }

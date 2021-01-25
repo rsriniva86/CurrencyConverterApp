@@ -32,5 +32,7 @@ abstract class CurrencyDatabase : RoomDatabase() {
         private fun buildDatabase(context: Context) = Room.databaseBuilder(context,
             CurrencyDatabase::class.java, "currency.db").build()
     }
+    var companion = Companion
+
 
 }
