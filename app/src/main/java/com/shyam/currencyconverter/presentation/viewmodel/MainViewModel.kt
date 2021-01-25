@@ -20,7 +20,7 @@ class MainViewModel() : BaseViewModel() {
 
     fun fetchData(){
         getCurrencyList()
-        getConversionList()
+
     }
 
 
@@ -39,7 +39,7 @@ class MainViewModel() : BaseViewModel() {
                         System.out.println(it.key)
                         System.out.println(it.value)
                     }
-
+                    getConversionList()
 
                 }
 
