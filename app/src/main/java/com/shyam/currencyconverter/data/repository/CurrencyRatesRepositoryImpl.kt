@@ -1,16 +1,19 @@
 package com.shyam.currencyconverter.data.repository
 
+import com.shyam.currencyconverter.CurrencyConverterApplication
 import com.shyam.currencyconverter.data.repository.source.Result
 import com.shyam.currencyconverter.data.repository.source.local.CurrencyLocalDataSource
 import com.shyam.currencyconverter.data.repository.source.local.database.entities.CurrencyList
 import com.shyam.currencyconverter.data.repository.source.local.database.entities.CurrencyRates
 import com.shyam.currencyconverter.data.repository.source.remote.CurrencyRemoteDataSource
+import com.shyam.currencyconverter.data.repository.source.remote.network.RetrofitClient
 import java.lang.Exception
 
 
-class CurrencyRatesRepositoryImpl  constructor(
-    private val localDataSource: CurrencyLocalDataSource,
-    private val remoteDataSource: CurrencyRemoteDataSource
+class CurrencyRatesRepositoryImpl(
+    private val localDataSource: CurrencyLocalDataSource = CurrencyLocalDataSource(CurrencyConverterApplication.getDatabase()),
+    private val remoteDataSource: CurrencyRemoteDataSource? = CurrencyRemoteDataSource(RetrofitClient.CURRENCY_LAYER_API_INTERFACE)
+
 ): CurrencyRatesRepository {
 
 
@@ -56,13 +59,13 @@ class CurrencyRatesRepositoryImpl  constructor(
         forceUpdate: Boolean
     ): Result<CurrencyRates?> {
         try {
-            val response = remoteDataSource.getCurrencyRates(base)
-            if (response.status == Result.Status.SUCCESS){
-                response.data?.let {
+            val response = remoteDataSource?.getCurrencyRates(base)
+            if (response?.status == Result.Status.SUCCESS){
+                response?.data?.let {
                     localDataSource.insertOrUpdateCurrencyRates(it)
                 }
-            }else if (response.status == Result.Status.ERROR){
-                throw Exception(response.message)
+            }else if (response?.status == Result.Status.ERROR){
+                throw Exception(response?.message)
             }
         }catch (ex: Exception){
             ex.message?.let{
@@ -82,20 +85,20 @@ class CurrencyRatesRepositoryImpl  constructor(
         forceUpdate: Boolean
     ): Result<CurrencyList?> {
         try {
-            val response = remoteDataSource.getCurrencyList()
-            if (response.status == Result.Status.SUCCESS){
-                val myMap=response.data?.currencies
+            val response = remoteDataSource?.getCurrencyList()
+            if (response?.status == Result.Status.SUCCESS){
+                val myMap=response?.data?.currencies
                 myMap?.forEach {
                     System.out.println("CurrencyRatesRepositoryImpl::Key is ${it.key} value is ${it.value}")
                 }
 
-                response.data?.let {
+                response?.data?.let {
                     System.out.println("insertOrUpdateCurrencyList")
                     localDataSource.insertOrUpdateCurrencyList(it)
                     System.out.println("insertOrUpdateCurrencyList done...")
                 }
-                return response
-            }else if (response.status == Result.Status.ERROR){
+                return response!!
+            }else if (response?.status == Result.Status.ERROR){
                 throw Exception(response.message)
             }
         }catch (ex: Exception){
