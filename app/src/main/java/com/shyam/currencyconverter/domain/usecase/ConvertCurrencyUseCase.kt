@@ -1,6 +1,5 @@
 package com.shyam.currencyconverter.domain.usecase
 
-import androidx.room.RoomDatabase
 import com.shyam.currencyconverter.CurrencyConverterApplication
 import com.shyam.currencyconverter.data.repository.CurrencyRatesRepository
 import com.shyam.currencyconverter.data.repository.CurrencyRatesRepositoryImpl
@@ -17,14 +16,22 @@ class ConvertCurrencyUseCase : UseCase<ConvertCurrencyUseCase.ConvertCurrencyReq
 
     override suspend fun executeUseCase(requestValues: ConvertCurrencyRequest?) {
 
-        val remoteDataSource:CurrencyRemoteDataSource = CurrencyRemoteDataSource(RetrofitClient.CURRENCY_LAYER_API_INTERFACE)
+        val remoteDataSource = CurrencyRemoteDataSource(RetrofitClient.CURRENCY_LAYER_API_INTERFACE)
         val localDataSource: CurrencyLocalDataSource? = CurrencyConverterApplication.getDatabase()?.let {
             CurrencyLocalDataSource(
                 it
             )
         }
         val repository:CurrencyRatesRepository = CurrencyRatesRepositoryImpl(remoteDataSource = remoteDataSource, localDataSource =localDataSource!! )
-        val currencyList = repository.getCurrencyList(true)
-
+        val currencyRates = repository.getCurrencyRates(base = requestValues?.baseCurrency as String,forceUpdate = true)
+        val myMap=currencyRates.data?.rates
+        myMap?.forEach {
+            System.out.println("ConvertCurrencyUseCase::Key is ${it.key} value is ${it.value}")
+        }
+        currencyRates.data?.rates?.let { ConvertCurrencyResponse(it) }?.let {
+            useCaseCallback?.onSuccess(
+                it
+            )
+        }
     }
 }

@@ -28,5 +28,7 @@ abstract class BaseViewModel() : ViewModel() {
      */
     protected val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
+    protected val ioScope = CoroutineScope(Dispatchers.IO + viewModelJob)
+
     abstract fun onCreate()
 }

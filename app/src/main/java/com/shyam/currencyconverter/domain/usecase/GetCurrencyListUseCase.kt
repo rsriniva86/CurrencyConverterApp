@@ -24,6 +24,10 @@ class GetCurrencyListUseCase: UseCase<GetCurrencyListUseCase.GetCurrencyListRequ
         }
         val repository:CurrencyRatesRepository = CurrencyRatesRepositoryImpl(remoteDataSource = remoteDataSource, localDataSource =localDataSource!! )
         val currencyList = repository.getCurrencyList(true)
+        val myMap=currencyList.data?.currencies
+        myMap?.forEach {
+            System.out.println("GetCurrencyListUseCase::Key is ${it.key} value is ${it.value}")
+        }
         useCaseCallback?.onSuccess(GetCurrencyListResponse(currencyList.data))
     }
 

@@ -18,7 +18,15 @@ class CurrencyRemoteDataSource (private val currencyLayerApiInterface: CurrencyL
         return try {
             val response = currencyLayerApiInterface.getCurrencyList(access_key)
             if (response.isSuccessful) {
-                success(response.body())
+                val responsebody = success(response.body())
+
+                val responsebody2=responsebody.data
+                val myMap=responsebody2?.currencies
+                myMap?.forEach {
+                    System.out.println("Key is ${it.key} value is ${it.value}")
+                }
+                Result(Result.Status.SUCCESS,CurrencyList(1, 1222,responsebody2?.currencies),"")
+
             } else {
                 error("Something went wrong ")
             }

@@ -84,13 +84,22 @@ class CurrencyRatesRepositoryImpl  constructor(
         try {
             val response = remoteDataSource.getCurrencyList()
             if (response.status == Result.Status.SUCCESS){
-                response.data?.let {
-                    localDataSource.insertOrUpdateCurrencyList(it)
+                val myMap=response.data?.currencies
+                myMap?.forEach {
+                    System.out.println("CurrencyRatesRepositoryImpl::Key is ${it.key} value is ${it.value}")
                 }
+
+                response.data?.let {
+                    System.out.println("insertOrUpdateCurrencyList")
+                    localDataSource.insertOrUpdateCurrencyList(it)
+                    System.out.println("insertOrUpdateCurrencyList done...")
+                }
+                return response
             }else if (response.status == Result.Status.ERROR){
                 throw Exception(response.message)
             }
         }catch (ex: Exception){
+            ex.printStackTrace()
             ex.message?.let{
                 return Result.error(it,null)
             }

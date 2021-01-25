@@ -2,16 +2,10 @@ package com.shyam.currencyconverter.presentation.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.shyam.currencyconverter.data.repository.CurrencyRatesRepository
-import com.shyam.currencyconverter.data.repository.CurrencyRatesRepositoryImpl
-import com.shyam.currencyconverter.data.repository.source.local.database.DatabaseService
-import com.shyam.currencyconverter.data.repository.source.remote.network.NetworkService
 import com.shyam.currencyconverter.domain.usecase.ConvertCurrencyUseCase
 import com.shyam.currencyconverter.domain.usecase.GetCurrencyListUseCase
-import com.shyam.currencyconverter.domain.usecase.base.UseCase
 import com.shyam.currencyconverter.domain.usecase.base.UseCase.UseCaseCallback
 import com.shyam.currencyconverter.presentation.view.base.BaseViewModel
-import com.shyam.currencyconverter.utils.NetworkHelper
 import kotlinx.coroutines.launch
 
 class MainViewModel() : BaseViewModel() {
@@ -25,15 +19,16 @@ class MainViewModel() : BaseViewModel() {
     }
 
     fun fetchData(){
-        launchDataLoad()
+        getCurrencyList()
+        getConversionList()
     }
 
 
     /**
      * Heavy operation that cannot be done in the Main Thread
      */
-    fun launchDataLoad() {
-        uiScope.launch {
+    fun getCurrencyList() {
+        ioScope.launch {
             val myUseCase : GetCurrencyListUseCase = GetCurrencyListUseCase()
             myUseCase.useCaseCallback = object : UseCaseCallback<GetCurrencyListUseCase.GetCurrencyListResponse>{
                 override fun onSuccess(response: GetCurrencyListUseCase.GetCurrencyListResponse) {
@@ -56,6 +51,38 @@ class MainViewModel() : BaseViewModel() {
 
             }
             myUseCase.executeUseCase(GetCurrencyListUseCase.GetCurrencyListRequest())
+
+        }
+    }
+
+
+    /**
+     * Heavy operation that cannot be done in the Main Thread
+     */
+    fun getConversionList() {
+        ioScope.launch {
+            val myUseCase : ConvertCurrencyUseCase = ConvertCurrencyUseCase()
+            myUseCase.useCaseCallback = object : UseCaseCallback<ConvertCurrencyUseCase.ConvertCurrencyResponse>{
+                override fun onSuccess(response: ConvertCurrencyUseCase.ConvertCurrencyResponse) {
+                    System.out.println("onSuccess")
+
+                    val myMap=response.output
+                    myMap?.forEach {
+                        System.out.println(it.key)
+                        System.out.println(it.value)
+                    }
+
+
+                }
+
+                override fun onError(t: Throwable) {
+                    System.out.println("onError")
+                    System.out.println(t.message)
+
+                }
+
+            }
+            myUseCase.executeUseCase(ConvertCurrencyUseCase.ConvertCurrencyRequest("USD"))
 
         }
     }
