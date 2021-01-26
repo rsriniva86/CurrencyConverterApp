@@ -18,41 +18,7 @@ class CurrencyRatesRepositoryImpl(
 
 
 
-//    fun getConversionMap():HashMap<String,Double>{
-//        val output=hashMapOf<String,Double>()
-//
-//        val currencyList=Currency.values()
-//        for (currentCurrency in currencyList){
-//            if(baseCurrency.name == currentCurrency.name){
-//
-//            }else {
-//                output.put(baseCurrency.name + currentCurrency.name, Math.random())
-//            }
-//        }
-//        return output;
-//    }
-//
-//    fun getConversionMap(userCurrency:Currency, baseMap:HashMap<String,Double>):HashMap<String,Double>{
-//        val output=hashMapOf<String,Double>()
-//        val currencyList=Currency.values()
-//
-//        //1 USD= .5 SGD
-//        val userCurrencyValue:Double=baseMap.get(baseCurrency.name+userCurrency)!!
-//
-//        //1 USD =100 Rs
-//        //1 SGD = ? 100/1.5
-//        for (currentCurrency in currencyList){
-//            if(userCurrency.name == currentCurrency.name){
-//
-//            }else {
-//                var key:String=baseCurrency.name+currentCurrency.name
-//                var baseCurrencyConversion:Double=baseMap.get(key) as Double
-//                var newvalue:Double= (baseCurrencyConversion / userCurrencyValue)
-//                output.put(userCurrency.name + currentCurrency.name,newvalue )
-//            }
-//        }
-//        return output;
-//    }
+
 
     override suspend fun getCurrencyRates(
         base: String,

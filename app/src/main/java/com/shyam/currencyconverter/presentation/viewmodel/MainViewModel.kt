@@ -39,19 +39,17 @@ class MainViewModel() : BaseViewModel() {
                         System.out.println(it.key)
                         System.out.println(it.value)
                     }
-                    getConversionList()
-
+                    myMap?.let {
+                        getConversionList(it)
+                    }
                 }
 
                 override fun onError(t: Throwable) {
                     System.out.println("onError")
                     System.out.println(t.message)
-
                 }
-
             }
             myUseCase.executeUseCase(GetCurrencyListUseCase.GetCurrencyListRequest())
-
         }
     }
 
@@ -59,7 +57,7 @@ class MainViewModel() : BaseViewModel() {
     /**
      * Heavy operation that cannot be done in the Main Thread
      */
-    fun getConversionList() {
+    fun getConversionList(currencyMap:Map<String,String>) {
         ioScope.launch {
             val myUseCase : ConvertCurrencyUseCase = ConvertCurrencyUseCase()
             myUseCase.useCaseCallback = object : UseCaseCallback<ConvertCurrencyUseCase.ConvertCurrencyResponse>{
@@ -82,7 +80,7 @@ class MainViewModel() : BaseViewModel() {
                 }
 
             }
-            myUseCase.executeUseCase(ConvertCurrencyUseCase.ConvertCurrencyRequest("USD"))
+            myUseCase.executeUseCase(ConvertCurrencyUseCase.ConvertCurrencyRequest(baseCurrency = "INR",currencyMap = currencyMap))
 
         }
     }
