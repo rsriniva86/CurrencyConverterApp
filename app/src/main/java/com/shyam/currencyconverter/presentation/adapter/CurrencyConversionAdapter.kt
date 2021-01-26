@@ -16,7 +16,8 @@ class CurrencyConversionAdapter :
     class CurrencyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val currencyRateTextView: TextView = itemView.currencyRateTextView
         fun bind(item: CurrencyConversionItem) {
-            currencyRateTextView.text = "${item.currency} : ${item.rate} "
+            val mutipliedValue:Double = item.multiplier * item.rate
+            currencyRateTextView.text = "${item.currency} : ${item.rate} \n ${mutipliedValue}"
         }
     }
 
@@ -37,8 +38,15 @@ class CurrencyConversionAdapter :
         conversionList.addAll(updatedConversionList)
         notifyDataSetChanged()
     }
+    fun updateListMultiplier(multiplier: Double) {
+        conversionList.forEach{
+            it.multiplier=multiplier
+        }
+        notifyDataSetChanged()
+    }
+
 
 
 }
 
-data class CurrencyConversionItem(val currency: String, val rate: Double)
+data class CurrencyConversionItem(val currency: String, val rate: Double,var multiplier:Double)

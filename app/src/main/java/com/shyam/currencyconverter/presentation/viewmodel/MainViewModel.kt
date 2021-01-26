@@ -19,9 +19,17 @@ class MainViewModel() : BaseViewModel() {
     private val _currencyListData = MutableLiveData<List<String>>()
     val currencyListData: LiveData<List<String>> = _currencyListData
 
+    private val _multiplierLiveData = MutableLiveData<Double>()
+    val multiplierLiveData: LiveData<Double> = _multiplierLiveData
 
+    var amountDouble=1.0
     override fun onCreate() {
         fetchData()
+    }
+
+    fun updateMultiplier(amount: String) {
+         amountDouble=amount.toDoubleOrNull()?:1.0
+         _multiplierLiveData.postValue(amountDouble)
     }
 
     fun fetchData() {
@@ -38,12 +46,12 @@ class MainViewModel() : BaseViewModel() {
                 object : UseCaseCallback<GetCurrencyListUseCase.GetCurrencyListResponse> {
                     override fun onSuccess(response: GetCurrencyListUseCase.GetCurrencyListResponse) {
                         Log.d(TAG, "onSuccess")
-                        val currencyListItems=response.convertToCurrencyListString()
+                        val currencyListItems = response.convertToCurrencyListString()
                         _currencyListData.postValue(currencyListItems)
 
                         val myMap = response.output?.currencies
                         myMap?.let {
-                          getConversionList("INR", it)
+                            getConversionList("INR", it)
                         }
                     }
 
@@ -67,7 +75,7 @@ class MainViewModel() : BaseViewModel() {
                 object : UseCaseCallback<ConvertCurrencyUseCase.ConvertCurrencyResponse> {
                     override fun onSuccess(response: ConvertCurrencyUseCase.ConvertCurrencyResponse) {
                         Log.d(TAG, "onSuccess")
-                        val listOfConversionItems = response.convertToCurrencyConversionItemList()
+                        val listOfConversionItems = response.convertToCurrencyConversionItemList(_multiplierLiveData.value?:1.0)
                         _currencyConversionData.postValue(listOfConversionItems)
                     }
 
@@ -86,6 +94,8 @@ class MainViewModel() : BaseViewModel() {
 
         }
     }
+
+
 
     companion object {
         val TAG = MainViewModel::class.simpleName

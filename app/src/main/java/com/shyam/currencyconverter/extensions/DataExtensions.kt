@@ -4,13 +4,13 @@ import com.shyam.currencyconverter.domain.usecase.ConvertCurrencyUseCase
 import com.shyam.currencyconverter.domain.usecase.GetCurrencyListUseCase
 import com.shyam.currencyconverter.presentation.adapter.CurrencyConversionItem
 
-fun ConvertCurrencyUseCase.ConvertCurrencyResponse.convertToCurrencyConversionItemList(): List<CurrencyConversionItem>{
+fun ConvertCurrencyUseCase.ConvertCurrencyResponse.convertToCurrencyConversionItemList(multiplier:Double): List<CurrencyConversionItem>{
 
     val outputList= mutableListOf<CurrencyConversionItem>()
     val myMap=this.output
     val myMapIterator=myMap.iterator()
     myMapIterator.forEach {
-        outputList.add(CurrencyConversionItem(it.key,it.value))
+        outputList.add(CurrencyConversionItem(it.key,it.value,multiplier))
     }
     return outputList
 

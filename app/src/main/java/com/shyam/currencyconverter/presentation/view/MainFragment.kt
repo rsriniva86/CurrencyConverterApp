@@ -1,11 +1,14 @@
 package com.shyam.currencyconverter.presentation.view
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.shyam.currencyconverter.R
+import com.shyam.currencyconverter.extensions.afterTextChanged
 import com.shyam.currencyconverter.presentation.adapter.CurrencyConversionAdapter
 import com.shyam.currencyconverter.presentation.adapter.CurrencyListAdapter
 import com.shyam.currencyconverter.presentation.view.base.BaseFragment
@@ -28,7 +31,7 @@ class MainFragment : BaseFragment<MainViewModel>() {
                 CurrencyListAdapter(it,android.R.layout.simple_spinner_dropdown_item, mutableListOf<String>())
             currencyListSpinner.adapter=currencyListAdapter
         }
-
+        amount.afterTextChanged { viewModel.updateMultiplier(it) }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,6 +46,9 @@ class MainFragment : BaseFragment<MainViewModel>() {
         })
         viewModel.currencyConversionData.observe(viewLifecycleOwner, Observer {
             currencyConversionAdapter.updateList(it)
+        })
+        viewModel.multiplierLiveData.observe(viewLifecycleOwner, Observer {
+            currencyConversionAdapter.updateListMultiplier(it)
         })
     }
     companion object {
