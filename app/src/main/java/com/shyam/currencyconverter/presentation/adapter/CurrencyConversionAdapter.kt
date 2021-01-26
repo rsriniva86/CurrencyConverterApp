@@ -1,5 +1,8 @@
 package com.shyam.currencyconverter.presentation.adapter
 
+import android.os.Build
+import android.text.Html
+import android.text.SpannedString
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -7,6 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.shyam.currencyconverter.R
 import com.shyam.currencyconverter.extensions.inflate
 import kotlinx.android.synthetic.main.item_currency_conversion_card.view.*
+import java.math.BigDecimal
+import java.math.RoundingMode
 
 class CurrencyConversionAdapter :
     RecyclerView.Adapter<CurrencyConversionAdapter.CurrencyViewHolder>() {
@@ -17,7 +22,17 @@ class CurrencyConversionAdapter :
         val currencyRateTextView: TextView = itemView.currencyRateTextView
         fun bind(item: CurrencyConversionItem) {
             val mutipliedValue:Double = item.multiplier * item.rate
-            currencyRateTextView.text = "${item.currency} : ${item.rate} \n ${mutipliedValue}"
+            //val decimalRate = BigDecimal(item.rate).setScale(2, RoundingMode.HALF_EVEN)
+            val decimalMutipliedValue = BigDecimal(mutipliedValue).setScale(2, RoundingMode.HALF_EVEN)
+
+            var htmlString="Currency: <b><font color = blue>${item.currency.substring(3)}</font> </b> <br>" +
+                    "Value:<b><font color = blue> ${decimalMutipliedValue}</font></b> <br>"
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                currencyRateTextView.text =Html.fromHtml(htmlString, Html.FROM_HTML_MODE_COMPACT)
+            } else {
+                currencyRateTextView.text =Html.fromHtml(htmlString)
+            }
+
         }
     }
 

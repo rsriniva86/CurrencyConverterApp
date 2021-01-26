@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.widget.AdapterView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
@@ -24,12 +25,28 @@ class MainFragment : BaseFragment<MainViewModel>() {
     lateinit var currencyListAdapter:CurrencyListAdapter
 
     override fun setupView(view: View) {
-        currencyConversionRecyclerView.layoutManager=GridLayoutManager(context,3)
-        currencyConversionRecyclerView.adapter=currencyConversionAdapter
+        with(currencyConversionRecyclerView){
+            layoutManager=GridLayoutManager(context,3)
+            adapter=currencyConversionAdapter
+        }
+
         context?.let {
             currencyListAdapter=
-                CurrencyListAdapter(it,android.R.layout.simple_spinner_dropdown_item, mutableListOf<String>())
-            currencyListSpinner.adapter=currencyListAdapter
+                CurrencyListAdapter(currencyListSpinner,it,android.R.layout.simple_spinner_dropdown_item, mutableListOf<String>())
+            with(currencyListSpinner){
+                adapter=currencyListAdapter
+                onItemSelectedListener=object : AdapterView.OnItemSelectedListener {
+                    override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+                        viewModel.updateBaseCurrency(parent.getItemAtPosition(position) as String)
+                    }
+
+                    override fun onNothingSelected(parent: AdapterView<*>) {
+
+                    }
+                }
+
+            }
+
         }
         amount.afterTextChanged { viewModel.updateMultiplier(it) }
     }
@@ -43,6 +60,7 @@ class MainFragment : BaseFragment<MainViewModel>() {
         super.setupObservers()
         viewModel.currencyListData.observe(viewLifecycleOwner, Observer {
             currencyListAdapter.updateArray(it)
+            currencyListAdapter.selectDefaultItem("JPY")
         })
         viewModel.currencyConversionData.observe(viewLifecycleOwner, Observer {
             currencyConversionAdapter.updateList(it)

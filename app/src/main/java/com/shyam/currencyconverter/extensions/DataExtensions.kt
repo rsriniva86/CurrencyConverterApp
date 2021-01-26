@@ -21,7 +21,7 @@ fun GetCurrencyListUseCase.GetCurrencyListResponse.convertToCurrencyListString()
     val myMap=this.output?.currencies
     val myMapIterator=myMap?.iterator()
     myMapIterator?.forEach {
-        outputList.add(it.value)
+        outputList.add("${it.key}")
     }
     return outputList
 }

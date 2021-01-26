@@ -16,6 +16,9 @@ class MainViewModel() : BaseViewModel() {
 
     private val _currencyConversionData = MutableLiveData<List<CurrencyConversionItem>>()
     val currencyConversionData: LiveData<List<CurrencyConversionItem>> = _currencyConversionData
+
+    private val _currencyMapLiveData=MutableLiveData<Map<String,String>>()
+
     private val _currencyListData = MutableLiveData<List<String>>()
     val currencyListData: LiveData<List<String>> = _currencyListData
 
@@ -30,6 +33,12 @@ class MainViewModel() : BaseViewModel() {
     fun updateMultiplier(amount: String) {
          amountDouble=amount.toDoubleOrNull()?:1.0
          _multiplierLiveData.postValue(amountDouble)
+    }
+
+    fun updateBaseCurrency(baseCurrency: String) {
+
+        getConversionList(baseCurrency = baseCurrency.substring(0,3),currencyMap = _currencyMapLiveData.value?: mapOf() )
+
     }
 
     fun fetchData() {
@@ -48,7 +57,7 @@ class MainViewModel() : BaseViewModel() {
                         Log.d(TAG, "onSuccess")
                         val currencyListItems = response.convertToCurrencyListString()
                         _currencyListData.postValue(currencyListItems)
-
+                        _currencyMapLiveData.postValue(response.output?.currencies)
                         val myMap = response.output?.currencies
                         myMap?.let {
                             getConversionList("INR", it)
@@ -94,6 +103,7 @@ class MainViewModel() : BaseViewModel() {
 
         }
     }
+
 
 
 
