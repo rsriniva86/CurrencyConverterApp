@@ -1,6 +1,7 @@
 package com.shyam.currencyconverter.extensions
 
 import com.shyam.currencyconverter.domain.usecase.ConvertCurrencyUseCase
+import com.shyam.currencyconverter.domain.usecase.GetCurrencyListUseCase
 import com.shyam.currencyconverter.presentation.adapter.CurrencyConversionItem
 
 fun ConvertCurrencyUseCase.ConvertCurrencyResponse.convertToCurrencyConversionItemList(): List<CurrencyConversionItem>{
@@ -13,4 +14,14 @@ fun ConvertCurrencyUseCase.ConvertCurrencyResponse.convertToCurrencyConversionIt
     }
     return outputList
 
+}
+
+fun GetCurrencyListUseCase.GetCurrencyListResponse.convertToCurrencyListString():List<String>{
+    val outputList= mutableListOf<String>()
+    val myMap=this.output?.currencies
+    val myMapIterator=myMap?.iterator()
+    myMapIterator?.forEach {
+        outputList.add(it.value)
+    }
+    return outputList
 }

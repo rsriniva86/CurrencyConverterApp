@@ -7,14 +7,18 @@ import com.shyam.currencyconverter.domain.usecase.ConvertCurrencyUseCase
 import com.shyam.currencyconverter.domain.usecase.GetCurrencyListUseCase
 import com.shyam.currencyconverter.domain.usecase.base.UseCase.UseCaseCallback
 import com.shyam.currencyconverter.extensions.convertToCurrencyConversionItemList
+import com.shyam.currencyconverter.extensions.convertToCurrencyListString
 import com.shyam.currencyconverter.presentation.adapter.CurrencyConversionItem
 import com.shyam.currencyconverter.presentation.view.base.BaseViewModel
 import kotlinx.coroutines.launch
 
 class MainViewModel() : BaseViewModel() {
 
-    private val _testData = MutableLiveData<List<CurrencyConversionItem>>()
-    val testData: LiveData<List<CurrencyConversionItem>> = _testData
+    private val _currencyConversionData = MutableLiveData<List<CurrencyConversionItem>>()
+    val currencyConversionData: LiveData<List<CurrencyConversionItem>> = _currencyConversionData
+    private val _currencyListData = MutableLiveData<List<String>>()
+    val currencyListData: LiveData<List<String>> = _currencyListData
+
 
     override fun onCreate() {
         fetchData()
@@ -33,21 +37,19 @@ class MainViewModel() : BaseViewModel() {
             myUseCase.useCaseCallback =
                 object : UseCaseCallback<GetCurrencyListUseCase.GetCurrencyListResponse> {
                     override fun onSuccess(response: GetCurrencyListUseCase.GetCurrencyListResponse) {
-                        System.out.println("onSuccess")
+                        Log.d(TAG, "onSuccess")
+                        val currencyListItems=response.convertToCurrencyListString()
+                        _currencyListData.postValue(currencyListItems)
 
                         val myMap = response.output?.currencies
-                        myMap?.forEach {
-                            System.out.println(it.key)
-                            System.out.println(it.value)
-                        }
                         myMap?.let {
-                            getConversionList("INR", it)
+                          getConversionList("INR", it)
                         }
                     }
 
                     override fun onError(t: Throwable) {
-                        System.out.println("onError")
-                        System.out.println(t.message)
+                        Log.d(TAG, "onError")
+                        Log.d(TAG, t.message)
                     }
                 }
             myUseCase.executeUseCase(GetCurrencyListUseCase.GetCurrencyListRequest())
@@ -66,7 +68,7 @@ class MainViewModel() : BaseViewModel() {
                     override fun onSuccess(response: ConvertCurrencyUseCase.ConvertCurrencyResponse) {
                         Log.d(TAG, "onSuccess")
                         val listOfConversionItems = response.convertToCurrencyConversionItemList()
-                        _testData.postValue(listOfConversionItems)
+                        _currencyConversionData.postValue(listOfConversionItems)
                     }
 
                     override fun onError(t: Throwable) {
