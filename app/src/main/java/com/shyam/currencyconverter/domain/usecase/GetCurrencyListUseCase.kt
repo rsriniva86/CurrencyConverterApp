@@ -1,5 +1,6 @@
 package com.shyam.currencyconverter.domain.usecase
 
+import android.util.Log
 import com.shyam.currencyconverter.data.repository.CurrencyRatesRepository
 import com.shyam.currencyconverter.data.repository.CurrencyRatesRepositoryImpl
 import com.shyam.currencyconverter.data.repository.local.database.entities.CurrencyList
@@ -17,8 +18,12 @@ class GetCurrencyListUseCase :
         val currencyList = repository.getCurrencyList(true)
         val myMap = currencyList.data?.currencies
         myMap?.forEach {
-            System.out.println("GetCurrencyListUseCase::Key is ${it.key} value is ${it.value}")
+            Log.d(TAG, "Key is ${it.key} value is ${it.value}")
         }
         useCaseCallback?.onSuccess(GetCurrencyListResponse(currencyList.data))
+    }
+
+    companion object {
+        val TAG = GetCurrencyListUseCase::class.simpleName
     }
 }

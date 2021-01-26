@@ -1,5 +1,6 @@
 package com.shyam.currencyconverter.data.repository
 
+import android.util.Log
 import com.shyam.currencyconverter.CurrencyConverterApplication
 import com.shyam.currencyconverter.data.repository.local.CurrencyLocalDataSource
 import com.shyam.currencyconverter.data.repository.local.database.entities.CurrencyList
@@ -15,11 +16,7 @@ class CurrencyRatesRepositoryImpl(
 
 ): CurrencyRatesRepository {
 
-
-
-
-
-    override suspend fun getCurrencyRates(
+   override suspend fun getCurrencyRates(
         base: String,
         forceUpdate: Boolean
     ): Result<CurrencyRates?> {
@@ -54,13 +51,13 @@ class CurrencyRatesRepositoryImpl(
             if (response?.status == Result.Status.SUCCESS){
                 val myMap=response?.data?.currencies
                 myMap?.forEach {
-                    System.out.println("CurrencyRatesRepositoryImpl::Key is ${it.key} value is ${it.value}")
+                   Log.d(TAG,"CurrencyRatesRepositoryImpl::Key is ${it.key} value is ${it.value}")
                 }
 
                 response?.data?.let {
-                    System.out.println("insertOrUpdateCurrencyList")
+                    Log.d(TAG,"insertOrUpdateCurrencyList")
                     localDataSource.insertOrUpdateCurrencyList(it)
-                    System.out.println("insertOrUpdateCurrencyList done...")
+                    Log.d(TAG,"insertOrUpdateCurrencyList done...")
                 }
                 return response!!
             }else if (response?.status == Result.Status.ERROR){
@@ -79,6 +76,10 @@ class CurrencyRatesRepositoryImpl(
 
     override suspend fun getSavedCurrencyList(): Result<CurrencyList?> {
         return localDataSource.getCurrencyList()
+    }
+
+    companion object{
+        val TAG = CurrencyRatesRepositoryImpl::class.simpleName
     }
 
 

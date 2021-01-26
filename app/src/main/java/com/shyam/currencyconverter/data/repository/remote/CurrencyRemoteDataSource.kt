@@ -1,9 +1,11 @@
 package com.shyam.currencyconverter.data.repository.remote
 
+import android.util.Log
 import com.shyam.currencyconverter.data.repository.local.database.entities.CurrencyList
 import com.shyam.currencyconverter.data.repository.local.database.entities.CurrencyRates
 import com.shyam.currencyconverter.data.repository.remote.network.CurrencyLayerApiInterface
 import com.shyam.currencyconverter.data.repository.CurrencyDataSource
+import com.shyam.currencyconverter.data.repository.CurrencyRatesRepositoryImpl
 import com.shyam.currencyconverter.data.repository.Result
 import com.shyam.currencyconverter.data.repository.Result.Companion.error
 import com.shyam.currencyconverter.data.repository.Result.Companion.success
@@ -11,9 +13,7 @@ import com.shyam.currencyconverter.data.repository.Result.Companion.success
 class CurrencyRemoteDataSource (private val currencyLayerApiInterface: CurrencyLayerApiInterface):
     CurrencyDataSource {
 
-    companion object {
-        const val access_key="78df2123bfe0efed327a5a0ea29c9764"
-    }
+
 
     override suspend fun getCurrencyList(): Result<CurrencyList?> {
         return try {
@@ -23,7 +23,7 @@ class CurrencyRemoteDataSource (private val currencyLayerApiInterface: CurrencyL
                 val responsebody2=responsebody.data
                 val myMap=responsebody2?.currencies
                 myMap?.forEach {
-                    System.out.println("Key is ${it.key} value is ${it.value}")
+                    Log.d(TAG,"Key is ${it.key} value is ${it.value}")
                 }
                 Result(
                     Result.Status.SUCCESS,
@@ -47,9 +47,10 @@ class CurrencyRemoteDataSource (private val currencyLayerApiInterface: CurrencyL
                 val responsebody2=responsebody.data
                 val myMap=responsebody2?.currencies
                 myMap?.forEach {
-                    System.out.println("getCurrencyRates::Key is ${it.key} value is ${it.value}")
+                    Log.d(TAG,"getCurrencyRates::Key is ${it.key} value is ${it.value}")
                 }
-                Result(Result.Status.SUCCESS,
+                Result(
+                    Result.Status.SUCCESS,
                     responsebody2?.currencies?.let { CurrencyRates(baseCurrency, 123, it) },
                     ""
                 )
@@ -67,6 +68,11 @@ class CurrencyRemoteDataSource (private val currencyLayerApiInterface: CurrencyL
 
     override suspend fun insertOrUpdateCurrencyRates(currencyRates: CurrencyRates) {
 
+    }
+
+    companion object {
+        val TAG= CurrencyRemoteDataSource::class.simpleName
+        const val access_key="78df2123bfe0efed327a5a0ea29c9764"
     }
 
 }
