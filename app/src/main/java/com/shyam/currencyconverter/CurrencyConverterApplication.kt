@@ -2,7 +2,7 @@ package com.shyam.currencyconverter
 
 
 import android.app.Application
-import com.shyam.currencyconverter.data.repository.local.database.CurrencyDatabase
+import com.shyam.currencyconverter.data.source.local.database.CurrencyDatabase
 
 
 class CurrencyConverterApplication : Application() {
