@@ -2,7 +2,7 @@ package com.shyam.currencyconverter.extensions
 
 import com.shyam.currencyconverter.domain.usecase.ConvertCurrencyUseCase
 import com.shyam.currencyconverter.domain.usecase.GetCurrencyListUseCase
-import com.shyam.currencyconverter.presentation.adapter.CurrencyConversionItem
+import com.shyam.currencyconverter.ui.adapter.CurrencyConversionItem
 
 fun ConvertCurrencyUseCase.ConvertCurrencyResponse.convertToCurrencyConversionItemList(multiplier:Double): List<CurrencyConversionItem>{
 

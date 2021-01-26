@@ -1,12 +1,11 @@
 package com.shyam.currencyconverter.data.repository
 
 import com.shyam.currencyconverter.CurrencyConverterApplication
-import com.shyam.currencyconverter.data.repository.source.Result
-import com.shyam.currencyconverter.data.repository.source.local.CurrencyLocalDataSource
-import com.shyam.currencyconverter.data.repository.source.local.database.entities.CurrencyList
-import com.shyam.currencyconverter.data.repository.source.local.database.entities.CurrencyRates
-import com.shyam.currencyconverter.data.repository.source.remote.CurrencyRemoteDataSource
-import com.shyam.currencyconverter.data.repository.source.remote.network.RetrofitClient
+import com.shyam.currencyconverter.data.repository.local.CurrencyLocalDataSource
+import com.shyam.currencyconverter.data.repository.local.database.entities.CurrencyList
+import com.shyam.currencyconverter.data.repository.local.database.entities.CurrencyRates
+import com.shyam.currencyconverter.data.repository.remote.CurrencyRemoteDataSource
+import com.shyam.currencyconverter.data.repository.remote.network.RetrofitClient
 import java.lang.Exception
 
 

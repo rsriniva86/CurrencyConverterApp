@@ -2,7 +2,7 @@ package com.shyam.currencyconverter.domain.usecase
 
 import com.shyam.currencyconverter.data.repository.CurrencyRatesRepository
 import com.shyam.currencyconverter.data.repository.CurrencyRatesRepositoryImpl
-import com.shyam.currencyconverter.data.repository.source.local.database.entities.CurrencyList
+import com.shyam.currencyconverter.data.repository.local.database.entities.CurrencyList
 import com.shyam.currencyconverter.domain.usecase.base.UseCase
 
 class GetCurrencyListUseCase :

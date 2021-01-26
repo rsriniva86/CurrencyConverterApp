@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:name=".CurrencyConverterApplication"
         android:theme="@style/Theme.CurrencyConverter">
-        <activity android:name="com.shyam.currencyconverter.presentation.view.MainActivity">
+        <activity android:name="com.shyam.currencyconverter.ui.view.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

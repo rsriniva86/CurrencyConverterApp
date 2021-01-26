@@ -1,0 +1,34 @@
+package com.shyam.currencyconverter.ui.view.base
+
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.*
+
+abstract class BaseViewModel() : ViewModel() {
+
+    override fun onCleared() {
+        super.onCleared()
+        viewModelJob.cancel()
+
+    }
+
+    val messageStringId: MutableLiveData<Int> = MutableLiveData()
+    val messageString: MutableLiveData<String> = MutableLiveData()
+
+    /**
+     * This is the job for all coroutines started by this ViewModel.
+     * Cancelling this job will cancel all coroutines started by this ViewModel.
+     */
+    private val viewModelJob = SupervisorJob()
+
+    /**
+     * This is the main scope for all coroutines launched by MainViewModel.
+     * Since we pass viewModelJob, you can cancel all coroutines
+     * launched by uiScope by calling viewModelJob.cancel()
+     */
+    protected val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
+
+    protected val ioScope = CoroutineScope(Dispatchers.IO + viewModelJob)
+
+    abstract fun onCreate()
+}

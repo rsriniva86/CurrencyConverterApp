@@ -1,8 +1,7 @@
 package com.shyam.currencyconverter.data.repository
 
-import com.shyam.currencyconverter.data.repository.source.Result
-import com.shyam.currencyconverter.data.repository.source.local.database.entities.CurrencyList
-import com.shyam.currencyconverter.data.repository.source.local.database.entities.CurrencyRates
+import com.shyam.currencyconverter.data.repository.local.database.entities.CurrencyList
+import com.shyam.currencyconverter.data.repository.local.database.entities.CurrencyRates
 
 interface CurrencyRatesRepository {
     suspend fun getCurrencyRates(base : String, forceUpdate: Boolean) : Result<CurrencyRates?>
