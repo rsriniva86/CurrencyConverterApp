@@ -1,8 +1,7 @@
 package com.shyam.currencyconverter.presentation.view
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
+import android.text.InputFilter
 import android.view.View
 import android.widget.AdapterView
 import androidx.lifecycle.Observer
@@ -12,6 +11,7 @@ import com.shyam.currencyconverter.R
 import com.shyam.currencyconverter.extensions.afterTextChanged
 import com.shyam.currencyconverter.presentation.adapter.CurrencyConversionAdapter
 import com.shyam.currencyconverter.presentation.adapter.CurrencyListAdapter
+import com.shyam.currencyconverter.presentation.utils.DecimalDigitsInputFilter
 import com.shyam.currencyconverter.presentation.view.base.BaseFragment
 import com.shyam.currencyconverter.presentation.viewmodel.MainViewModel
 import kotlinx.android.synthetic.main.main_fragment.*
@@ -48,7 +48,11 @@ class MainFragment : BaseFragment<MainViewModel>() {
             }
 
         }
+        with(amount){
+            setFilters(arrayOf<InputFilter>(DecimalDigitsInputFilter(7, 2)))
+        }
         amount.afterTextChanged { viewModel.updateMultiplier(it) }
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
