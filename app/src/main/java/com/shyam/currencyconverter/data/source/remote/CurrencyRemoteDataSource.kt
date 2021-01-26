@@ -8,6 +8,8 @@ import com.shyam.currencyconverter.data.source.CurrencyDataSource
 import com.shyam.currencyconverter.data.repository.Result
 import com.shyam.currencyconverter.data.repository.Result.Companion.error
 import com.shyam.currencyconverter.data.repository.Result.Companion.success
+import com.shyam.currencyconverter.util.Constants
+import com.shyam.currencyconverter.util.TimestampCalculation
 
 class CurrencyRemoteDataSource (private val currencyLayerApiInterface: CurrencyLayerApiInterface):
     CurrencyDataSource {
@@ -16,7 +18,7 @@ class CurrencyRemoteDataSource (private val currencyLayerApiInterface: CurrencyL
 
     override suspend fun getCurrencyList(): Result<CurrencyList?> {
         return try {
-            val response = currencyLayerApiInterface.getCurrencyList(access_key)
+            val response = currencyLayerApiInterface.getCurrencyList(Constants.server_access_key)
             if (response.isSuccessful) {
                 val responsebody = success(response.body())
                 val responsebody2=responsebody.data
@@ -26,7 +28,7 @@ class CurrencyRemoteDataSource (private val currencyLayerApiInterface: CurrencyL
                 }
                 Result(
                     Result.Status.SUCCESS,
-                    CurrencyList(1, 1222, responsebody2?.currencies),
+                    CurrencyList(1, TimestampCalculation.generateTimestamp(), responsebody2?.currencies),
                     ""
                 )
 
@@ -40,7 +42,7 @@ class CurrencyRemoteDataSource (private val currencyLayerApiInterface: CurrencyL
 
     override suspend fun getCurrencyRates(baseCurrency: String): Result<CurrencyRates?> {
         return try {
-            val response = currencyLayerApiInterface.getCurrencyRates(access_key,baseCurrency)
+            val response = currencyLayerApiInterface.getCurrencyRates(Constants.server_access_key,baseCurrency)
             if (response.isSuccessful) {
                 val responsebody = success(response.body())
                 val responsebody2=responsebody.data
@@ -50,7 +52,7 @@ class CurrencyRemoteDataSource (private val currencyLayerApiInterface: CurrencyL
                 }
                 Result(
                     Result.Status.SUCCESS,
-                    responsebody2?.currencies?.let { CurrencyRates(baseCurrency, 123, it) },
+                    responsebody2?.currencies?.let { CurrencyRates(baseCurrency, TimestampCalculation.generateTimestamp(), it) },
                     ""
                 )
 
@@ -71,7 +73,6 @@ class CurrencyRemoteDataSource (private val currencyLayerApiInterface: CurrencyL
 
     companion object {
         val TAG= CurrencyRemoteDataSource::class.simpleName
-        const val access_key="78df2123bfe0efed327a5a0ea29c9764"
     }
 
 }
