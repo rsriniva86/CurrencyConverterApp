@@ -20,9 +20,7 @@ class CurrencyConversionAdapter :
     class CurrencyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val currencyRateTextView: TextView = itemView.currencyRateTextView
         fun bind(item: CurrencyConversionItem) {
-            val mutipliedValue:Double = item.multiplier * item.rate
-            //val decimalRate = BigDecimal(item.rate).setScale(2, RoundingMode.HALF_EVEN)
-            val decimalMutipliedValue = BigDecimal(mutipliedValue).setScale(2, RoundingMode.HALF_EVEN)
+            val decimalMutipliedValue = (item.multiplier * item.rate).setScale(2, RoundingMode.HALF_EVEN)
 
             var htmlString="Currency: <b><font color = blue>${item.currency.substring(3)}</font> </b> <br>" +
                     "Value:<b><font color = blue> ${decimalMutipliedValue}</font></b> <br>"
@@ -52,7 +50,7 @@ class CurrencyConversionAdapter :
         conversionList.addAll(updatedConversionList)
         notifyDataSetChanged()
     }
-    fun updateListMultiplier(multiplier: Double) {
+    fun updateListMultiplier(multiplier: BigDecimal) {
         conversionList.forEach{
             it.multiplier=multiplier
         }
@@ -61,4 +59,4 @@ class CurrencyConversionAdapter :
 
 }
 
-data class CurrencyConversionItem(val currency: String, val rate: Double,var multiplier:Double)
+data class CurrencyConversionItem(val currency: String, val rate: BigDecimal,var multiplier:BigDecimal)

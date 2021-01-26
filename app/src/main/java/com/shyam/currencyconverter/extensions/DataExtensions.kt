@@ -3,8 +3,9 @@ package com.shyam.currencyconverter.extensions
 import com.shyam.currencyconverter.domain.usecases.ConvertCurrencyUseCase
 import com.shyam.currencyconverter.domain.usecases.GetCurrencyListUseCase
 import com.shyam.currencyconverter.presentation.adapter.CurrencyConversionItem
+import java.math.BigDecimal
 
-fun ConvertCurrencyUseCase.ConvertCurrencyResponse.convertToCurrencyConversionItemList(multiplier:Double): List<CurrencyConversionItem>{
+fun ConvertCurrencyUseCase.ConvertCurrencyResponse.convertToCurrencyConversionItemList(multiplier:BigDecimal): List<CurrencyConversionItem>{
 
     val outputList= mutableListOf<CurrencyConversionItem>()
     val myMap=this.output

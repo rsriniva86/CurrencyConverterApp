@@ -9,11 +9,11 @@ import com.shyam.currencyconverter.data.source.local.database.dao.CurrencyListDa
 import com.shyam.currencyconverter.data.source.local.database.dao.CurrencyRatesDao
 import com.shyam.currencyconverter.data.source.local.database.entities.CurrencyList
 import com.shyam.currencyconverter.data.source.local.database.entities.CurrencyRates
-import com.shyam.currencyconverter.data.source.local.database.typeconverters.DoubleMapConverter
+import com.shyam.currencyconverter.data.source.local.database.typeconverters.BigDecimalMapConverter
 import com.shyam.currencyconverter.data.source.local.database.typeconverters.StringMapConverter
 
 @Database(entities = [CurrencyList::class,CurrencyRates::class],version = 1,exportSchema = false)
-@TypeConverters(DoubleMapConverter::class,StringMapConverter::class)
+@TypeConverters(BigDecimalMapConverter::class,StringMapConverter::class)
 abstract class CurrencyDatabase : RoomDatabase() {
 
     abstract fun getCurrencyListDao():CurrencyListDao

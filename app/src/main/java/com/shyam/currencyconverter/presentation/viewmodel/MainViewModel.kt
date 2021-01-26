@@ -11,6 +11,7 @@ import com.shyam.currencyconverter.extensions.convertToCurrencyListString
 import com.shyam.currencyconverter.presentation.adapter.CurrencyConversionItem
 import com.shyam.currencyconverter.presentation.view.base.BaseViewModel
 import kotlinx.coroutines.launch
+import java.math.BigDecimal
 
 class MainViewModel() : BaseViewModel() {
 
@@ -22,17 +23,17 @@ class MainViewModel() : BaseViewModel() {
     private val _currencyListData = MutableLiveData<List<String>>()
     val currencyListData: LiveData<List<String>> = _currencyListData
 
-    private val _multiplierLiveData = MutableLiveData<Double>()
-    val multiplierLiveData: LiveData<Double> = _multiplierLiveData
+    private val _multiplierLiveData = MutableLiveData<BigDecimal>()
+    val multiplierLiveData: LiveData<BigDecimal> = _multiplierLiveData
 
-    var amountDouble = 1.0
+    var amountBigDecimal :BigDecimal = BigDecimal(1.0)
     override fun onCreate() {
         fetchData()
     }
 
     fun updateMultiplier(amount: String) {
-        amountDouble = amount.toDoubleOrNull() ?: 1.0
-        _multiplierLiveData.postValue(amountDouble)
+        amountBigDecimal = amount.toBigDecimalOrNull() ?: BigDecimal(1.0)
+        _multiplierLiveData.postValue(amountBigDecimal)
     }
 
     fun updateBaseCurrency(baseCurrency: String) {
@@ -82,7 +83,7 @@ class MainViewModel() : BaseViewModel() {
                     override fun onSuccess(response: ConvertCurrencyUseCase.ConvertCurrencyResponse) {
                         Log.d(TAG, "onSuccess")
                         val listOfConversionItems = response.convertToCurrencyConversionItemList(
-                            _multiplierLiveData.value ?: 1.0
+                            _multiplierLiveData.value ?: BigDecimal(1.0)
                         )
                         _currencyConversionData.postValue(listOfConversionItems)
                     }

@@ -3,19 +3,20 @@ package com.shyam.currencyconverter.data.source.local.database.typeconverters
 import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import java.math.BigDecimal
 
-object DoubleMapConverter {
+object BigDecimalMapConverter {
     @TypeConverter
     @JvmStatic
-    fun fromString(value: String?): Map<String, Double> {
+    fun fromString(value: String?): Map<String, BigDecimal> {
         val mapType = object :
-            TypeToken<Map<String?, Double?>?>() {}.type
+            TypeToken<Map<String?, BigDecimal?>?>() {}.type
         return Gson().fromJson(value, mapType)
     }
 
     @TypeConverter
     @JvmStatic
-    fun fromDoubleMap(map: Map<String?, Double?>?): String {
+    fun fromBigDecimalMap(map: Map<String?, BigDecimal?>?): String {
         val gson = Gson()
         return gson.toJson(map)
     }

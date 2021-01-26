@@ -4,12 +4,13 @@ import android.util.Log
 import com.shyam.currencyconverter.data.repository.CurrencyRatesRepository
 import com.shyam.currencyconverter.data.repository.CurrencyRatesRepositoryImpl
 import com.shyam.currencyconverter.domain.UseCase
+import java.math.BigDecimal
 
 class ConvertCurrencyUseCase : UseCase<ConvertCurrencyUseCase.ConvertCurrencyRequest, ConvertCurrencyUseCase.ConvertCurrencyResponse>() {
 
 
     data class ConvertCurrencyRequest(val baseCurrency:String,val currencyMap:Map<String,String>): UseCase.RequestValues
-    data class ConvertCurrencyResponse(val output:Map<String,Double>): UseCase.ResponseValue
+    data class ConvertCurrencyResponse(val output:Map<String,BigDecimal>): UseCase.ResponseValue
 
     override suspend fun executeUseCase(requestValues: ConvertCurrencyRequest?) {
         val repository: CurrencyRatesRepository = CurrencyRatesRepositoryImpl()
@@ -33,20 +34,20 @@ class ConvertCurrencyUseCase : UseCase<ConvertCurrencyUseCase.ConvertCurrencyReq
 
 
 
-    fun getConversionMap(userCurrency:String, baseMap:Map<String,Double>, currencyMap: Map<String, String>):ConvertCurrencyResponse{
+    fun getConversionMap(userCurrency:String, baseMap:Map<String,BigDecimal>, currencyMap: Map<String, String>):ConvertCurrencyResponse{
 
 
-        val outputMap= mutableMapOf<String,Double>()
+        val outputMap= mutableMapOf<String,BigDecimal>()
 
         //1 USD= .5 SGD
-        val userCurrencyValue:Double=baseMap.get("USD"+userCurrency)!!
+        val userCurrencyValue:BigDecimal=baseMap.get("USD"+userCurrency)!!
 
         //1 USD =100 Rs
         //1 SGD = ? 100/1.5
         for (currentCurrency in currencyMap.keys){
                             var key:String="USD"+currentCurrency
-                var baseCurrencyConversion:Double=baseMap.get(key) as Double
-                var newvalue:Double= (baseCurrencyConversion / userCurrencyValue)
+                var baseCurrencyConversion:BigDecimal=baseMap.get(key) as BigDecimal
+                var newvalue:BigDecimal= (baseCurrencyConversion / userCurrencyValue)
                 outputMap.put(userCurrency + currentCurrency,newvalue)
 
         }
