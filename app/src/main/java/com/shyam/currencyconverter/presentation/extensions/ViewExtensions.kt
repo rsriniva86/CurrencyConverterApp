@@ -1,4 +1,4 @@
-package com.shyam.currencyconverter.extensions
+package com.shyam.currencyconverter.presentation.extensions
 
 import android.text.Editable
 import android.text.TextWatcher

@@ -23,11 +23,11 @@ class CurrencyRatesRepositoryImpl(
         try {
             val response = remoteDataSource?.getCurrencyRates(base)
             if (response?.status == Result.Status.SUCCESS){
-                response?.data?.let {
+                response.data?.let {
                     localDataSource.insertOrUpdateCurrencyRates(it)
                 }
             }else if (response?.status == Result.Status.ERROR){
-                throw Exception(response?.message)
+                throw Exception(response.message)
             }
         }catch (ex: Exception){
             ex.message?.let{
@@ -49,17 +49,17 @@ class CurrencyRatesRepositoryImpl(
         try {
             val response = remoteDataSource?.getCurrencyList()
             if (response?.status == Result.Status.SUCCESS){
-                val myMap=response?.data?.currencies
+                val myMap=response.data?.currencies
                 myMap?.forEach {
                    Log.d(TAG,"CurrencyRatesRepositoryImpl::Key is ${it.key} value is ${it.value}")
                 }
 
-                response?.data?.let {
+                response.data?.let {
                     Log.d(TAG,"insertOrUpdateCurrencyList")
                     localDataSource.insertOrUpdateCurrencyList(it)
                     Log.d(TAG,"insertOrUpdateCurrencyList done...")
                 }
-                return response!!
+                return response
             }else if (response?.status == Result.Status.ERROR){
                 throw Exception(response.message)
             }

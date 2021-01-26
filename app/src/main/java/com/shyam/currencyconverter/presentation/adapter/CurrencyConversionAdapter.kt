@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.shyam.currencyconverter.R
-import com.shyam.currencyconverter.extensions.inflate
+import com.shyam.currencyconverter.presentation.extensions.inflate
 import kotlinx.android.synthetic.main.item_currency_conversion_card.view.*
 import java.math.BigDecimal
 import java.math.RoundingMode
@@ -27,6 +27,7 @@ class CurrencyConversionAdapter :
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 currencyRateTextView.text =Html.fromHtml(htmlString, Html.FROM_HTML_MODE_COMPACT)
             } else {
+                @Suppress("DEPRECATION")
                 currencyRateTextView.text =Html.fromHtml(htmlString)
             }
 

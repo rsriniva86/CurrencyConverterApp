@@ -1,4 +1,4 @@
-package com.shyam.currencyconverter.extensions
+package com.shyam.currencyconverter.domain.extensions
 
 import com.shyam.currencyconverter.domain.usecases.ConvertCurrencyUseCase
 import com.shyam.currencyconverter.domain.usecases.GetCurrencyListUseCase

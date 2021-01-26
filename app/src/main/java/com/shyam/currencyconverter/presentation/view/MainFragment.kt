@@ -8,7 +8,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.shyam.currencyconverter.R
-import com.shyam.currencyconverter.extensions.afterTextChanged
+import com.shyam.currencyconverter.presentation.extensions.afterTextChanged
 import com.shyam.currencyconverter.presentation.adapter.CurrencyConversionAdapter
 import com.shyam.currencyconverter.presentation.adapter.CurrencyListAdapter
 import com.shyam.currencyconverter.presentation.utils.DecimalDigitsInputFilter

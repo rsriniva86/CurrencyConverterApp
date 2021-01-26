@@ -6,8 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import com.shyam.currencyconverter.domain.usecases.ConvertCurrencyUseCase
 import com.shyam.currencyconverter.domain.usecases.GetCurrencyListUseCase
 import com.shyam.currencyconverter.domain.UseCase.UseCaseCallback
-import com.shyam.currencyconverter.extensions.convertToCurrencyConversionItemList
-import com.shyam.currencyconverter.extensions.convertToCurrencyListString
+import com.shyam.currencyconverter.domain.extensions.convertToCurrencyConversionItemList
+import com.shyam.currencyconverter.domain.extensions.convertToCurrencyListString
 import com.shyam.currencyconverter.presentation.adapter.CurrencyConversionItem
 import com.shyam.currencyconverter.presentation.view.base.BaseViewModel
 import kotlinx.coroutines.launch
@@ -64,7 +64,7 @@ class MainViewModel() : BaseViewModel() {
 
                     override fun onError(t: Throwable) {
                         Log.d(TAG, "onError")
-                        Log.d(TAG, t.message)
+                        Log.d(TAG, t.message as String)
                     }
                 }
             myUseCase.executeUseCase(GetCurrencyListUseCase.GetCurrencyListRequest())
@@ -90,7 +90,7 @@ class MainViewModel() : BaseViewModel() {
 
                     override fun onError(t: Throwable) {
                         Log.d(TAG, "onError")
-                        Log.d(TAG, t.message)
+                        Log.d(TAG, t.message as String)
                     }
 
                 }
