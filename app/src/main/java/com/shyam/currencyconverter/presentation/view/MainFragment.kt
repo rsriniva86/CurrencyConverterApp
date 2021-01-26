@@ -2,18 +2,23 @@ package com.shyam.currencyconverter.presentation.view
 
 import android.os.Bundle
 import android.text.InputFilter
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import com.shyam.currencyconverter.CurrencyConverterApplication
 import com.shyam.currencyconverter.R
+import com.shyam.currencyconverter.data.repository.CurrencyRatesRepositoryImpl
 import com.shyam.currencyconverter.presentation.extensions.afterTextChanged
 import com.shyam.currencyconverter.presentation.adapter.CurrencyConversionAdapter
 import com.shyam.currencyconverter.presentation.adapter.CurrencyListAdapter
 import com.shyam.currencyconverter.presentation.utils.DecimalDigitsInputFilter
 import com.shyam.currencyconverter.presentation.view.base.BaseFragment
 import com.shyam.currencyconverter.presentation.viewmodel.MainViewModel
+import com.shyam.currencyconverter.util.NetworkHelper
 import kotlinx.android.synthetic.main.main_fragment.*
 
 
@@ -25,6 +30,14 @@ class MainFragment : BaseFragment<MainViewModel>() {
     lateinit var currencyListAdapter:CurrencyListAdapter
 
     override fun setupView(view: View) {
+
+        CurrencyConverterApplication.getContext()?.let {
+            val isNetworkAvailable= NetworkHelper.isNetworkAvailable(it)
+            if(!isNetworkAvailable){
+                Log.d(TAG,"network is not available")
+                Toast.makeText(this.context,"Network is not available",Toast.LENGTH_LONG).show()
+            }
+        }
         with(currencyConversionRecyclerView){
             layoutManager=GridLayoutManager(context,3)
             adapter=currencyConversionAdapter

@@ -7,6 +7,7 @@ import com.shyam.currencyconverter.data.source.local.database.entities.CurrencyL
 import com.shyam.currencyconverter.data.source.local.database.entities.CurrencyRates
 import com.shyam.currencyconverter.data.source.remote.CurrencyRemoteDataSource
 import com.shyam.currencyconverter.data.source.remote.network.RetrofitClient
+import com.shyam.currencyconverter.util.NetworkHelper
 import com.shyam.currencyconverter.util.TimestampCalculation
 import java.lang.Exception
 
@@ -34,6 +35,15 @@ class CurrencyRatesRepositoryImpl(
         }
         Log.d(TAG,"currencylist is stale")
 
+        //Handle for no network
+        CurrencyConverterApplication.getContext()?.let {
+            val isNetworkAvailable=NetworkHelper.isNetworkAvailable(it)
+            if(!isNetworkAvailable){
+                Log.d(TAG,"network is not available,sending stale data")
+                return getSavedCurrencyList()
+            }
+        }
+        Log.d(TAG,"network is available,fetching data from server")
         try {
             val response = remoteDataSource?.getCurrencyList()
             if (response?.status == Result.Status.SUCCESS){
@@ -76,6 +86,15 @@ class CurrencyRatesRepositoryImpl(
            }
        }
        Log.d(TAG,"currencyrates is  stale")
+       //Handle for no network
+       CurrencyConverterApplication.getContext()?.let {
+           val isNetworkAvailable=NetworkHelper.isNetworkAvailable(it)
+           if(!isNetworkAvailable){
+               Log.d(TAG,"network is not available,sending stale data")
+               return getSavedCurrencyRates(base)
+           }
+       }
+       Log.d(TAG,"network is available,fetching data from server")
         try {
             val response = remoteDataSource?.getCurrencyRates(base)
             if (response?.status == Result.Status.SUCCESS){
