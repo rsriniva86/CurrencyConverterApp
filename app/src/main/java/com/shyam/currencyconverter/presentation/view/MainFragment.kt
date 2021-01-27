@@ -45,6 +45,10 @@ class MainFragment : BaseFragment<MainViewModel>() {
             with(currencyListSpinner) {
                 adapter = currencyListAdapter
                 onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                    override fun onNothingSelected(parent: AdapterView<*>?) {
+
+                    }
+
                     override fun onItemSelected(
                         parent: AdapterView<*>,
                         view: View,
@@ -52,10 +56,6 @@ class MainFragment : BaseFragment<MainViewModel>() {
                         id: Long
                     ) {
                         viewModel.updateBaseCurrency(parent.getItemAtPosition(position) as String)
-                    }
-
-                    override fun onNothingSelected(parent: AdapterView<*>) {
-
                     }
                 }
 

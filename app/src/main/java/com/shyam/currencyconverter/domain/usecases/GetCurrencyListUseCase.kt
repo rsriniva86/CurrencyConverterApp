@@ -1,6 +1,7 @@
 package com.shyam.currencyconverter.domain.usecases
 
 import android.util.Log
+import com.shyam.currencyconverter.core.DataSourceProviderImpl
 import com.shyam.currencyconverter.data.repository.CurrencyRatesRepository
 import com.shyam.currencyconverter.data.repository.CurrencyRatesRepositoryImpl
 import com.shyam.currencyconverter.data.source.local.database.entities.CurrencyList
@@ -15,7 +16,7 @@ class GetCurrencyListUseCase :
     data class GetCurrencyListResponse(val output: CurrencyList?) : ResponseValue
 
     override suspend fun executeUseCase(requestValues: GetCurrencyListRequest?) {
-        val repository: CurrencyRatesRepository = CurrencyRatesRepositoryImpl()
+        val repository: CurrencyRatesRepository = CurrencyRatesRepositoryImpl(dataSourceProvider = DataSourceProviderImpl())
 
         //get data from local source
         val savedCurrencyList = repository.getSavedCurrencyList()

@@ -1,6 +1,7 @@
 package com.shyam.currencyconverter.domain.usecases
 
 import android.util.Log
+import com.shyam.currencyconverter.core.DataSourceProviderImpl
 import com.shyam.currencyconverter.data.repository.CurrencyRatesRepository
 import com.shyam.currencyconverter.data.repository.CurrencyRatesRepositoryImpl
 import com.shyam.currencyconverter.data.repository.Result
@@ -21,7 +22,7 @@ class ConvertCurrencyUseCase :
     data class ConvertCurrencyResponse(val output: Map<String, BigDecimal>) : ResponseValue
 
     override suspend fun executeUseCase(requestValues: ConvertCurrencyRequest?) {
-        val repository: CurrencyRatesRepository = CurrencyRatesRepositoryImpl()
+        val repository: CurrencyRatesRepository = CurrencyRatesRepositoryImpl(dataSourceProvider = DataSourceProviderImpl())
 
         val savedCurrencyRates = repository.getSavedCurrencyRates(BASE_CURRENCY_INTERNAL)
 
@@ -90,7 +91,7 @@ class ConvertCurrencyUseCase :
             baseMap[BASE_CURRENCY_INTERNAL + userCurrency] ?: error("cannot get userCurrencyValue")
         for (currentCurrency in currencyMap.keys) {
             val key: String = BASE_CURRENCY_INTERNAL + currentCurrency
-            val baseCurrencyConversion: BigDecimal = baseMap.get(key) as BigDecimal
+            val baseCurrencyConversion: BigDecimal = baseMap[key] as BigDecimal
             val updatedValue: BigDecimal = (baseCurrencyConversion / userCurrencyValue)
             outputMap[userCurrency + currentCurrency] = updatedValue
         }
