@@ -105,7 +105,7 @@ class MainFragment : BaseFragment<MainViewModel>() {
     companion object {
         private const val TAG = "MainFragment"
         fun newInstance(): MainFragment = MainFragment()
-        private const val GRID_MAX_COLS=3
+        private const val GRID_MAX_COLS = 3
     }
 
 

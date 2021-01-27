@@ -3,30 +3,66 @@ package com.shyam.currencyconverter.domain.usecases
 import android.util.Log
 import com.shyam.currencyconverter.data.repository.CurrencyRatesRepository
 import com.shyam.currencyconverter.data.repository.CurrencyRatesRepositoryImpl
+import com.shyam.currencyconverter.data.repository.Result
+import com.shyam.currencyconverter.data.source.local.database.entities.CurrencyRates
 import com.shyam.currencyconverter.domain.UseCase
+import com.shyam.currencyconverter.util.TimestampCalculation
 import java.math.BigDecimal
 
 class ConvertCurrencyUseCase :
     UseCase<ConvertCurrencyUseCase.ConvertCurrencyRequest, ConvertCurrencyUseCase.ConvertCurrencyResponse>() {
 
-
     data class ConvertCurrencyRequest(
         val baseCurrency: String,
-        val currencyMap: Map<String, String>
-    ) : UseCase.RequestValues
+        val currencyMap: Map<String, String>,
+        val isNetworkConnected: Boolean
+    ) : RequestValues
 
-    data class ConvertCurrencyResponse(val output: Map<String, BigDecimal>) : UseCase.ResponseValue
+    data class ConvertCurrencyResponse(val output: Map<String, BigDecimal>) : ResponseValue
 
     override suspend fun executeUseCase(requestValues: ConvertCurrencyRequest?) {
         val repository: CurrencyRatesRepository = CurrencyRatesRepositoryImpl()
-        val currencyRates = repository.getCurrencyRates(base = "USD", forceUpdate = true)
+
+        val savedCurrencyRates = repository.getSavedCurrencyRates(BASE_CURRENCY_INTERNAL)
+
+        //Check if it is stale or not
+        savedCurrencyRates.data?.let {
+            val isStale = TimestampCalculation.isTimestampStale(it.timestamp)
+            if (!isStale) {
+                Log.d(CurrencyRatesRepositoryImpl.TAG, "currency rates is not stale")
+                onSuccess(requestValues, savedCurrencyRates)
+                return
+            }
+        }
+        Log.d(CurrencyRatesRepositoryImpl.TAG, "currency rates is  stale")
+        //Handle for no network
+        if (requestValues?.isNetworkConnected == false) {
+            Log.d(
+                CurrencyRatesRepositoryImpl.TAG,
+                "network is not available,sending stale data"
+            )
+            onSuccess(requestValues, savedCurrencyRates)
+            return
+        }
+
+        Log.d(CurrencyRatesRepositoryImpl.TAG, "network is available,fetching data from server")
+
+        val currencyRates =
+            repository.getCurrencyRates(base = BASE_CURRENCY_INTERNAL, forceUpdate = true)
         val myMap = currencyRates.data?.rates
         myMap?.forEach {
             Log.d(TAG, "ConvertCurrencyUseCase::Key is ${it.key} value is ${it.value}")
         }
+        onSuccess(requestValues, currencyRates)
+    }
+
+    private fun onSuccess(
+        requestValues: ConvertCurrencyRequest?,
+        currencyRates: Result<CurrencyRates?>
+    ) {
         currencyRates.data?.rates?.let { ConvertCurrencyResponse(it) }?.let {
             useCaseCallback?.onSuccess(
-                if (requestValues?.baseCurrency == "USD") {
+                if (requestValues?.baseCurrency == BASE_CURRENCY_INTERNAL) {
                     it
                 } else {
                     val userCurrency = requestValues?.baseCurrency
@@ -42,31 +78,27 @@ class ConvertCurrencyUseCase :
     }
 
 
-    fun getConversionMap(
+    private fun getConversionMap(
         userCurrency: String,
         baseMap: Map<String, BigDecimal>,
         currencyMap: Map<String, String>
     ): ConvertCurrencyResponse {
 
-
         val outputMap = mutableMapOf<String, BigDecimal>()
-
-        //1 USD= .5 SGD
-        val userCurrencyValue: BigDecimal = baseMap.get("USD" + userCurrency)!!
-
-        //1 USD =100 Rs
-        //1 SGD = ? 100/1.5
+        //TODO error handling
+        val userCurrencyValue: BigDecimal =
+            baseMap[BASE_CURRENCY_INTERNAL + userCurrency] ?: error("cannot get userCurrencyValue")
         for (currentCurrency in currencyMap.keys) {
-            var key: String = "USD" + currentCurrency
-            var baseCurrencyConversion: BigDecimal = baseMap.get(key) as BigDecimal
-            var newvalue: BigDecimal = (baseCurrencyConversion / userCurrencyValue)
-            outputMap.put(userCurrency + currentCurrency, newvalue)
-
+            val key: String = BASE_CURRENCY_INTERNAL + currentCurrency
+            val baseCurrencyConversion: BigDecimal = baseMap.get(key) as BigDecimal
+            val updatedValue: BigDecimal = (baseCurrencyConversion / userCurrencyValue)
+            outputMap[userCurrency + currentCurrency] = updatedValue
         }
         return ConvertCurrencyResponse(outputMap)
     }
 
     companion object {
+        private const val BASE_CURRENCY_INTERNAL = "USD"
         val TAG = ConvertCurrencyUseCase::class.simpleName
     }
 

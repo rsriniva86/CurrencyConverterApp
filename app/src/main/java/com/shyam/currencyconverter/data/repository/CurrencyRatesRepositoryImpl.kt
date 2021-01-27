@@ -7,8 +7,6 @@ import com.shyam.currencyconverter.data.source.local.database.entities.CurrencyL
 import com.shyam.currencyconverter.data.source.local.database.entities.CurrencyRates
 import com.shyam.currencyconverter.data.source.remote.CurrencyRemoteDataSource
 import com.shyam.currencyconverter.data.source.remote.network.RetrofitClient
-import com.shyam.currencyconverter.util.NetworkHelper
-import com.shyam.currencyconverter.util.TimestampCalculation
 
 
 class CurrencyRatesRepositoryImpl(
@@ -21,32 +19,8 @@ class CurrencyRatesRepositoryImpl(
 
 ) : CurrencyRatesRepository {
 
-    override suspend fun getCurrencyList(
-        forceUpdate: Boolean
-    ): Result<CurrencyList?> {
+    override suspend fun getCurrencyList(forceUpdate: Boolean): Result<CurrencyList?> {
 
-        //get data from local source
-        val currencyList = getSavedCurrencyList()
-
-        //Check if it is stale or not
-        currencyList.data?.let {
-            val isStale = TimestampCalculation.isTimestampStale(it.timestamp)
-            if (!isStale) {
-                Log.d(TAG, "currencylist is not stale")
-                return currencyList
-            }
-        }
-        Log.d(TAG, "currencylist is stale")
-
-        //Handle for no network
-        CurrencyConverterApplication.getContext()?.let {
-            val isNetworkAvailable = NetworkHelper.isNetworkAvailable(it)
-            if (!isNetworkAvailable) {
-                Log.d(TAG, "network is not available,sending stale data")
-                return getSavedCurrencyList()
-            }
-        }
-        Log.d(TAG, "network is available,fetching data from server")
         try {
             val response = remoteDataSource?.getCurrencyList()
             if (response?.status == Result.Status.SUCCESS) {
@@ -79,25 +53,6 @@ class CurrencyRatesRepositoryImpl(
         base: String,
         forceUpdate: Boolean
     ): Result<CurrencyRates?> {
-        val currencyRates = getSavedCurrencyRates(base)
-        //Check if it is stale or not
-        currencyRates.data?.let {
-            val isStale = TimestampCalculation.isTimestampStale(it.timestamp)
-            if (!isStale) {
-                Log.d(TAG, "currencyrates is not stale")
-                return currencyRates
-            }
-        }
-        Log.d(TAG, "currencyrates is  stale")
-        //Handle for no network
-        CurrencyConverterApplication.getContext()?.let {
-            val isNetworkAvailable = NetworkHelper.isNetworkAvailable(it)
-            if (!isNetworkAvailable) {
-                Log.d(TAG, "network is not available,sending stale data")
-                return getSavedCurrencyRates(base)
-            }
-        }
-        Log.d(TAG, "network is available,fetching data from server")
         try {
             val response = remoteDataSource?.getCurrencyRates(base)
             if (response?.status == Result.Status.SUCCESS) {

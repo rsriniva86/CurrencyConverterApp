@@ -33,8 +33,8 @@ class MainViewModel() : BaseViewModel() {
     private val _networkConnectivityLiveData = MutableLiveData<Event<Boolean>>()
     val networkConnectivityLiveData: LiveData<Event<Boolean>> = _networkConnectivityLiveData
 
-    var amountBigDecimal: BigDecimal = BigDecimal(1.0)
-    var isNetworkConnected: Boolean = false
+    private var amountBigDecimal: BigDecimal = BigDecimal(1.0)
+    private var isNetworkConnected: Boolean = false
 
     override fun onCreate() {
         fetchData()
@@ -70,7 +70,7 @@ class MainViewModel() : BaseViewModel() {
                         Log.d(TAG, "onSuccess")
                         val currencyListItems = response.convertToCurrencyListString()
                         _currencyListData.postValue(currencyListItems)
-                        _currencyMapLiveData.postValue(response.output?.currencies)
+                        this@MainViewModel._currencyMapLiveData.postValue(response.output?.currencies)
                     }
 
                     override fun onError(t: Throwable) {
@@ -112,7 +112,8 @@ class MainViewModel() : BaseViewModel() {
             myUseCase.executeUseCase(
                 ConvertCurrencyUseCase.ConvertCurrencyRequest(
                     baseCurrency = baseCurrency,
-                    currencyMap = currencyMap
+                    currencyMap = currencyMap,
+                    isNetworkConnected = isNetworkConnected
                 )
             )
 
@@ -121,6 +122,6 @@ class MainViewModel() : BaseViewModel() {
 
 
     companion object {
-        val TAG = MainViewModel::class.simpleName
+        private val TAG = MainViewModel::class.simpleName
     }
 }
