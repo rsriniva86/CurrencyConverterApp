@@ -18,6 +18,9 @@
 - Handle for case when first time app is opened and there is no internet
 - Introduce Dependency injection
 - Introduce Pull to refresh UX pattern
+- Adding more logs
+- Error handling in general
+- Adding more comments in code
 ### UI Improvements
 - Associate flag with currency code 
 - Currency names to be displayed in grid view items

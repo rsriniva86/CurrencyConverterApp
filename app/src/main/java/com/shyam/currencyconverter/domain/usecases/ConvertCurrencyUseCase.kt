@@ -22,7 +22,8 @@ class ConvertCurrencyUseCase :
     data class ConvertCurrencyResponse(val output: Map<String, BigDecimal>) : ResponseValue
 
     override suspend fun executeUseCase(requestValues: ConvertCurrencyRequest?) {
-        val repository: CurrencyRatesRepository = CurrencyRatesRepositoryImpl(dataSourceProvider = DataSourceProviderImpl())
+        val repository: CurrencyRatesRepository =
+            CurrencyRatesRepositoryImpl(dataSourceProvider = DataSourceProviderImpl())
 
         val savedCurrencyRates = repository.getSavedCurrencyRates(BASE_CURRENCY_INTERNAL)
 

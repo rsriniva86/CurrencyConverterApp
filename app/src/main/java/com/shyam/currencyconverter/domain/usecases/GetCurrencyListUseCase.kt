@@ -16,7 +16,8 @@ class GetCurrencyListUseCase :
     data class GetCurrencyListResponse(val output: CurrencyList?) : ResponseValue
 
     override suspend fun executeUseCase(requestValues: GetCurrencyListRequest?) {
-        val repository: CurrencyRatesRepository = CurrencyRatesRepositoryImpl(dataSourceProvider = DataSourceProviderImpl())
+        val repository: CurrencyRatesRepository =
+            CurrencyRatesRepositoryImpl(dataSourceProvider = DataSourceProviderImpl())
 
         //get data from local source
         val savedCurrencyList = repository.getSavedCurrencyList()
