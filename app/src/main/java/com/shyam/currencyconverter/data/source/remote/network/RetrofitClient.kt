@@ -13,10 +13,11 @@ object RetrofitClient {
 
         val levelType: HttpLoggingInterceptor.Level
         if (BuildConfig.BUILD_TYPE.contentEquals("debug"))
-            levelType = HttpLoggingInterceptor.Level.BODY else levelType = HttpLoggingInterceptor.Level.NONE
+            levelType = HttpLoggingInterceptor.Level.BODY else levelType =
+            HttpLoggingInterceptor.Level.NONE
 
         val logging = HttpLoggingInterceptor()
-        logging.setLevel(levelType)
+        logging.level = levelType
 
         val okhttpClient = OkHttpClient.Builder()
         okhttpClient.addInterceptor(logging)

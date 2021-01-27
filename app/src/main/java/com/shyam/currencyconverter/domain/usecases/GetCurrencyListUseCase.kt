@@ -10,7 +10,7 @@ class GetCurrencyListUseCase :
     UseCase<GetCurrencyListUseCase.GetCurrencyListRequest, GetCurrencyListUseCase.GetCurrencyListResponse>() {
 
 
-    class GetCurrencyListRequest() : UseCase.RequestValues
+    class GetCurrencyListRequest : UseCase.RequestValues
     data class GetCurrencyListResponse(val output: CurrencyList?) : UseCase.ResponseValue
 
     override suspend fun executeUseCase(requestValues: GetCurrencyListRequest?) {

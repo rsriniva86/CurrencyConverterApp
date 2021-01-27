@@ -9,14 +9,16 @@ import retrofit2.http.Query
 interface CurrencyLayerApiInterface {
 
     @GET("list")
-    suspend fun getCurrencyList(@Query ("access_key") access_key:String) : Response<GetCurrenctListResponse>
+    suspend fun getCurrencyList(@Query("access_key") access_key: String): Response<GetCurrenctListResponse>
 
     @GET("live")
-    suspend fun getCurrencyRates(@Query ("access_key") access_key:String,
-                                 @Query("source") source:String)
+    suspend fun getCurrencyRates(
+        @Query("access_key") access_key: String,
+        @Query("source") source: String
+    )
             : Response<GetCurrencyRatesResponse>
 
-    companion object{
-        const val BASE_URL="http://api.currencylayer.com"
+    companion object {
+        const val BASE_URL = "http://api.currencylayer.com"
     }
 }

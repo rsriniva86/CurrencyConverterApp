@@ -7,7 +7,7 @@ import com.shyam.currencyconverter.data.source.local.database.entities.CurrencyR
 interface CurrencyRatesDao {
 
     @Query("Select * from CurrencyRates where base = :symbol")
-    fun getRates(symbol:String):CurrencyRates?
+    fun getRates(symbol: String): CurrencyRates?
 
     @Transaction
     @Insert(onConflict = OnConflictStrategy.REPLACE)

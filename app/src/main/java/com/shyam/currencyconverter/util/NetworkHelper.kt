@@ -7,7 +7,7 @@ import android.util.Log
 
 object NetworkHelper {
 
-    val TAG=NetworkHelper::class.simpleName
+    val TAG = NetworkHelper::class.simpleName
     fun isNetworkAvailable(context: Context): Boolean {
         val connectivityManager =
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager

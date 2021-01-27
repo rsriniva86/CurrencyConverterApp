@@ -5,6 +5,6 @@ import com.google.gson.annotations.SerializedName
 class GetCurrenctListResponse {
 
     @SerializedName("currencies")
-    var currencies: Map<String,String>?=null
+    var currencies: Map<String, String>? = null
 
 }

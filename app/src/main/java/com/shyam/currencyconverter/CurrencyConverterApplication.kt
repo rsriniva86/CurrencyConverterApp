@@ -9,11 +9,12 @@ import com.shyam.currencyconverter.data.source.local.database.CurrencyDatabase
 class CurrencyConverterApplication : Application() {
 
     companion object {
-        var databaseService: CurrencyDatabase?=null
+        var databaseService: CurrencyDatabase? = null
         fun getDatabase(): CurrencyDatabase? {
             return databaseService
         }
-        var currencyConverterApplicationContext: Context?=null
+
+        var currencyConverterApplicationContext: Context? = null
         fun getContext(): Context? {
             return currencyConverterApplicationContext
         }
@@ -27,7 +28,7 @@ class CurrencyConverterApplication : Application() {
     }
 
     private fun getDependencies() {
-        databaseService= CurrencyDatabase.invoke(this)
-        currencyConverterApplicationContext=applicationContext;
+        databaseService = CurrencyDatabase.invoke(this)
+        currencyConverterApplicationContext = applicationContext
     }
 }

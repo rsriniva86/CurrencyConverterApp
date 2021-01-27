@@ -1,4 +1,5 @@
 package com.shyam.currencyconverter.presentation.view.base
+
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -24,8 +25,12 @@ abstract class BaseFragment<VM : BaseViewModel> : Fragment() {
         viewModel.onCreate()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-            inflater.inflate(provideLayoutId(), container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? =
+        inflater.inflate(provideLayoutId(), container, false)
 
     protected open fun setupObservers() {
         viewModel.messageString.observe(this, Observer {
@@ -44,7 +49,8 @@ abstract class BaseFragment<VM : BaseViewModel> : Fragment() {
     }
 
 
-    fun showMessage(message: String) = context?.let { Toast.makeText(it, message, Toast.LENGTH_SHORT).show() }
+    fun showMessage(message: String) =
+        context?.let { Toast.makeText(it, message, Toast.LENGTH_SHORT).show() }
 
     fun showMessage(@StringRes resId: Int) = showMessage(getString(resId))
 

@@ -6,19 +6,19 @@ import android.widget.Spinner
 
 class CurrencyListAdapter(
     val spinner: Spinner,
-    context:Context,
-    resource:Int,
+    context: Context,
+    resource: Int,
     myArray: MutableList<String>
-) : ArrayAdapter<String>(context,resource,myArray) {
+) : ArrayAdapter<String>(context, resource, myArray) {
 
-    fun selectDefaultItem(myString:String){
+    fun selectDefaultItem(myString: String) {
         val spinnerPosition: Int = getPosition(myString)
-        if(spinnerPosition>=0) {
+        if (spinnerPosition >= 0) {
             spinner.setSelection(spinnerPosition)
         }
     }
 
-    fun updateArray(updatedArray:List<String>){
+    fun updateArray(updatedArray: List<String>) {
         this.clear()
         this.addAll(updatedArray)
         this.notifyDataSetChanged()

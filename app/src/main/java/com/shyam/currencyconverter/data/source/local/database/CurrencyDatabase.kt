@@ -12,26 +12,30 @@ import com.shyam.currencyconverter.data.source.local.database.entities.CurrencyR
 import com.shyam.currencyconverter.data.source.local.database.typeconverters.BigDecimalMapConverter
 import com.shyam.currencyconverter.data.source.local.database.typeconverters.StringMapConverter
 
-@Database(entities = [CurrencyList::class,CurrencyRates::class],version = 1,exportSchema = false)
-@TypeConverters(BigDecimalMapConverter::class,StringMapConverter::class)
+@Database(entities = [CurrencyList::class, CurrencyRates::class], version = 1, exportSchema = false)
+@TypeConverters(BigDecimalMapConverter::class, StringMapConverter::class)
 abstract class CurrencyDatabase : RoomDatabase() {
 
-    abstract fun getCurrencyListDao():CurrencyListDao
-    abstract fun getCurrencyRatesDao():CurrencyRatesDao
+    abstract fun getCurrencyListDao(): CurrencyListDao
+    abstract fun getCurrencyRatesDao(): CurrencyRatesDao
 
-    companion object{
-        @Volatile private var instance: CurrencyDatabase? = null
+    companion object {
+        @Volatile
+        private var instance: CurrencyDatabase? = null
         private val LOCK = Any()
 
         operator fun invoke(context: Context) = instance
-            ?: synchronized(LOCK){
+            ?: synchronized(LOCK) {
                 buildDatabase(context)
                     .also { instance = it }
             }
 
-        private fun buildDatabase(context: Context) = Room.databaseBuilder(context,
-            CurrencyDatabase::class.java, "currency.db").build()
+        private fun buildDatabase(context: Context) = Room.databaseBuilder(
+            context,
+            CurrencyDatabase::class.java, "currency.db"
+        ).build()
     }
+
     var companion = Companion
 
 

@@ -11,10 +11,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.shyam.currencyconverter.CurrencyConverterApplication
 import com.shyam.currencyconverter.R
-import com.shyam.currencyconverter.data.repository.CurrencyRatesRepositoryImpl
-import com.shyam.currencyconverter.presentation.extensions.afterTextChanged
 import com.shyam.currencyconverter.presentation.adapter.CurrencyConversionAdapter
 import com.shyam.currencyconverter.presentation.adapter.CurrencyListAdapter
+import com.shyam.currencyconverter.presentation.extensions.afterTextChanged
 import com.shyam.currencyconverter.presentation.utils.DecimalDigitsInputFilter
 import com.shyam.currencyconverter.presentation.view.base.BaseFragment
 import com.shyam.currencyconverter.presentation.viewmodel.MainViewModel
@@ -26,30 +25,40 @@ class MainFragment : BaseFragment<MainViewModel>() {
 
     override fun provideLayoutId(): Int = R.layout.main_fragment
 
-    val currencyConversionAdapter:CurrencyConversionAdapter= CurrencyConversionAdapter()
-    lateinit var currencyListAdapter:CurrencyListAdapter
+    val currencyConversionAdapter: CurrencyConversionAdapter = CurrencyConversionAdapter()
+    lateinit var currencyListAdapter: CurrencyListAdapter
 
     override fun setupView(view: View) {
 
         CurrencyConverterApplication.getContext()?.let {
-            val isNetworkAvailable= NetworkHelper.isNetworkAvailable(it)
-            if(!isNetworkAvailable){
-                Log.d(TAG,"network is not available")
-                Toast.makeText(this.context,"Network is not available",Toast.LENGTH_LONG).show()
+            val isNetworkAvailable = NetworkHelper.isNetworkAvailable(it)
+            if (!isNetworkAvailable) {
+                Log.d(TAG, "network is not available")
+                Toast.makeText(this.context, "Network is not available", Toast.LENGTH_LONG).show()
             }
         }
-        with(currencyConversionRecyclerView){
-            layoutManager=GridLayoutManager(context,3)
-            adapter=currencyConversionAdapter
+        with(currencyConversionRecyclerView) {
+            layoutManager = GridLayoutManager(context, 3)
+            adapter = currencyConversionAdapter
         }
 
         context?.let {
-            currencyListAdapter=
-                CurrencyListAdapter(currencyListSpinner,it,android.R.layout.simple_spinner_dropdown_item, mutableListOf<String>())
-            with(currencyListSpinner){
-                adapter=currencyListAdapter
-                onItemSelectedListener=object : AdapterView.OnItemSelectedListener {
-                    override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+            currencyListAdapter =
+                CurrencyListAdapter(
+                    currencyListSpinner,
+                    it,
+                    android.R.layout.simple_spinner_dropdown_item,
+                    mutableListOf<String>()
+                )
+            with(currencyListSpinner) {
+                adapter = currencyListAdapter
+                onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                    override fun onItemSelected(
+                        parent: AdapterView<*>,
+                        view: View,
+                        position: Int,
+                        id: Long
+                    ) {
                         viewModel.updateBaseCurrency(parent.getItemAtPosition(position) as String)
                     }
 
@@ -61,8 +70,8 @@ class MainFragment : BaseFragment<MainViewModel>() {
             }
 
         }
-        with(amount){
-            setFilters(arrayOf<InputFilter>(DecimalDigitsInputFilter(7, 2)))
+        with(amount) {
+            filters = arrayOf<InputFilter>(DecimalDigitsInputFilter(7, 2))
         }
         amount.afterTextChanged { viewModel.updateMultiplier(it) }
 
@@ -86,6 +95,7 @@ class MainFragment : BaseFragment<MainViewModel>() {
             currencyConversionAdapter.updateListMultiplier(it)
         })
     }
+
     companion object {
 
         val TAG = "MainFragment"

@@ -5,4 +5,8 @@ import androidx.room.PrimaryKey
 import java.math.BigDecimal
 
 @Entity(tableName = "CurrencyRates")
-data class CurrencyRates(@PrimaryKey val base: String, val timestamp: Long, val rates: Map<String, BigDecimal>)
+data class CurrencyRates(
+    @PrimaryKey val base: String,
+    val timestamp: Long,
+    val rates: Map<String, BigDecimal>
+)

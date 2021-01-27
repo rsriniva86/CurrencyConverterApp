@@ -7,7 +7,7 @@ import com.shyam.currencyconverter.data.source.local.database.entities.CurrencyL
 interface CurrencyListDao {
 
     @Query("Select * from CurrencyList")
-    fun getCurrencyList():CurrencyList?
+    fun getCurrencyList(): CurrencyList?
 
     @Transaction
     @Insert(onConflict = OnConflictStrategy.REPLACE)

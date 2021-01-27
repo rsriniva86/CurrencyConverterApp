@@ -6,7 +6,7 @@ abstract class UseCase<Q : UseCase.RequestValues, P : UseCase.ResponseValue> {
 
     var useCaseCallback: UseCaseCallback<P>? = null
 
-    suspend internal fun  run() {
+    internal suspend fun run() {
         executeUseCase(requestValues)
     }
 
@@ -15,16 +15,12 @@ abstract class UseCase<Q : UseCase.RequestValues, P : UseCase.ResponseValue> {
     /**
      * Data passed to a request.
      */
-    interface RequestValues{
-
-    }
+    interface RequestValues
 
     /**
      * Data received from a request.
      */
-    interface ResponseValue{
-
-    }
+    interface ResponseValue
 
     interface UseCaseCallback<P> {
         fun onSuccess(response: P)

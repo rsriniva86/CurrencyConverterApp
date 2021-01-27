@@ -3,30 +3,31 @@ package com.shyam.currencyconverter.presentation.viewmodel
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.shyam.currencyconverter.domain.usecases.ConvertCurrencyUseCase
-import com.shyam.currencyconverter.domain.usecases.GetCurrencyListUseCase
 import com.shyam.currencyconverter.domain.UseCase.UseCaseCallback
 import com.shyam.currencyconverter.domain.extensions.convertToCurrencyConversionItemList
 import com.shyam.currencyconverter.domain.extensions.convertToCurrencyListString
+import com.shyam.currencyconverter.domain.usecases.ConvertCurrencyUseCase
+import com.shyam.currencyconverter.domain.usecases.GetCurrencyListUseCase
 import com.shyam.currencyconverter.presentation.adapter.CurrencyConversionItem
 import com.shyam.currencyconverter.presentation.view.base.BaseViewModel
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
 
-class MainViewModel() : BaseViewModel() {
+class MainViewModel : BaseViewModel() {
 
-    private val _currencyConversionData = MutableLiveData<List<CurrencyConversionItem>>()
-    val currencyConversionData: LiveData<List<CurrencyConversionItem>> = _currencyConversionData
-
+    /**
+     * live data for currencyMap, currency conversion.
+     */
+    private val _currencyConversionLiveData = MutableLiveData<List<CurrencyConversionItem>>()
+    val currencyConversionData: LiveData<List<CurrencyConversionItem>> = _currencyConversionLiveData
     private val _currencyMapLiveData = MutableLiveData<Map<String, String>>()
-
     private val _currencyListData = MutableLiveData<List<String>>()
     val currencyListData: LiveData<List<String>> = _currencyListData
 
     private val _multiplierLiveData = MutableLiveData<BigDecimal>()
     val multiplierLiveData: LiveData<BigDecimal> = _multiplierLiveData
 
-    var amountBigDecimal :BigDecimal = BigDecimal(1.0)
+    var amountBigDecimal: BigDecimal = BigDecimal(1.0)
     override fun onCreate() {
         fetchData()
     }
@@ -85,7 +86,7 @@ class MainViewModel() : BaseViewModel() {
                         val listOfConversionItems = response.convertToCurrencyConversionItemList(
                             _multiplierLiveData.value ?: BigDecimal(1.0)
                         )
-                        _currencyConversionData.postValue(listOfConversionItems)
+                        _currencyConversionLiveData.postValue(listOfConversionItems)
                     }
 
                     override fun onError(t: Throwable) {

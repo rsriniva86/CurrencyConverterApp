@@ -20,15 +20,17 @@ class CurrencyConversionAdapter :
     class CurrencyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val currencyRateTextView: TextView = itemView.currencyRateTextView
         fun bind(item: CurrencyConversionItem) {
-            val decimalMutipliedValue = (item.multiplier * item.rate).setScale(2, RoundingMode.HALF_EVEN)
+            val decimalMutipliedValue =
+                (item.multiplier * item.rate).setScale(2, RoundingMode.HALF_EVEN)
 
-            var htmlString="Currency: <b><font color = blue>${item.currency.substring(3)}</font> </b> <br>" +
-                    "Value:<b><font color = blue> ${decimalMutipliedValue}</font></b> <br>"
+            var htmlString =
+                "Currency: <b><font color = blue>${item.currency.substring(3)}</font> </b> <br>" +
+                        "Value:<b><font color = blue> ${decimalMutipliedValue}</font></b> <br>"
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                currencyRateTextView.text =Html.fromHtml(htmlString, Html.FROM_HTML_MODE_COMPACT)
+                currencyRateTextView.text = Html.fromHtml(htmlString, Html.FROM_HTML_MODE_COMPACT)
             } else {
                 @Suppress("DEPRECATION")
-                currencyRateTextView.text =Html.fromHtml(htmlString)
+                currencyRateTextView.text = Html.fromHtml(htmlString)
             }
 
         }
@@ -51,13 +53,18 @@ class CurrencyConversionAdapter :
         conversionList.addAll(updatedConversionList)
         notifyDataSetChanged()
     }
+
     fun updateListMultiplier(multiplier: BigDecimal) {
-        conversionList.forEach{
-            it.multiplier=multiplier
+        conversionList.forEach {
+            it.multiplier = multiplier
         }
         notifyDataSetChanged()
     }
 
 }
 
-data class CurrencyConversionItem(val currency: String, val rate: BigDecimal,var multiplier:BigDecimal)
+data class CurrencyConversionItem(
+    val currency: String,
+    val rate: BigDecimal,
+    var multiplier: BigDecimal
+)

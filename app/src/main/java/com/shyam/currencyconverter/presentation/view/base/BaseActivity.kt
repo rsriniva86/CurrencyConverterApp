@@ -25,7 +25,6 @@ abstract class BaseActivity<VM : BaseViewModel> : AppCompatActivity() {
     }
 
 
-
     protected open fun setupObservers() {
         viewModel.messageString.observe(this, Observer {
             showMessage(it)
@@ -36,7 +35,8 @@ abstract class BaseActivity<VM : BaseViewModel> : AppCompatActivity() {
         })
     }
 
-    fun showMessage(message: String) = Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
+    fun showMessage(message: String) =
+        Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
 
     fun showMessage(@StringRes resId: Int) = showMessage(getString(resId))
 
