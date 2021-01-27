@@ -9,7 +9,6 @@ import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
-import com.shyam.currencyconverter.CurrencyConverterApplication
 import com.shyam.currencyconverter.R
 import com.shyam.currencyconverter.presentation.adapter.CurrencyConversionAdapter
 import com.shyam.currencyconverter.presentation.adapter.CurrencyListAdapter
@@ -17,7 +16,7 @@ import com.shyam.currencyconverter.presentation.extensions.afterTextChanged
 import com.shyam.currencyconverter.presentation.utils.DecimalDigitsInputFilter
 import com.shyam.currencyconverter.presentation.view.base.BaseFragment
 import com.shyam.currencyconverter.presentation.viewmodel.MainViewModel
-import com.shyam.currencyconverter.util.NetworkHelper
+import com.shyam.currencyconverter.util.NetworkConnectionCheckerImpl
 import kotlinx.android.synthetic.main.main_fragment.*
 
 
@@ -25,20 +24,13 @@ class MainFragment : BaseFragment<MainViewModel>() {
 
     override fun provideLayoutId(): Int = R.layout.main_fragment
 
-    val currencyConversionAdapter: CurrencyConversionAdapter = CurrencyConversionAdapter()
-    lateinit var currencyListAdapter: CurrencyListAdapter
+    private val currencyConversionAdapter: CurrencyConversionAdapter = CurrencyConversionAdapter()
+    private lateinit var currencyListAdapter: CurrencyListAdapter
 
     override fun setupView(view: View) {
 
-        CurrencyConverterApplication.getContext()?.let {
-            val isNetworkAvailable = NetworkHelper.isNetworkAvailable(it)
-            if (!isNetworkAvailable) {
-                Log.d(TAG, "network is not available")
-                Toast.makeText(this.context, "Network is not available", Toast.LENGTH_LONG).show()
-            }
-        }
         with(currencyConversionRecyclerView) {
-            layoutManager = GridLayoutManager(context, 3)
+            layoutManager = GridLayoutManager(context, GRID_MAX_COLS)
             adapter = currencyConversionAdapter
         }
 
@@ -78,7 +70,9 @@ class MainFragment : BaseFragment<MainViewModel>() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(MainViewModel::class.java).apply {
+            networkConnectionChecker = NetworkConnectionCheckerImpl(context = requireContext())
+        }
         super.onCreate(savedInstanceState)
     }
 
@@ -94,18 +88,24 @@ class MainFragment : BaseFragment<MainViewModel>() {
         viewModel.multiplierLiveData.observe(viewLifecycleOwner, Observer {
             currencyConversionAdapter.updateListMultiplier(it)
         })
+
+        viewModel.networkConnectivityLiveData.observe(viewLifecycleOwner, Observer {
+            if (!it.hasBeenHandled) {
+                val isNetworkAvailable = it.getContentIfNotHandled() ?: true
+                if (!isNetworkAvailable) {
+                    Log.d(TAG, "network is not available")
+                    Toast.makeText(this.context, "Network is not available", Toast.LENGTH_LONG)
+                        .show()
+                }
+            }
+        })
+
     }
 
     companion object {
-
-        val TAG = "MainFragment"
-
-        fun newInstance(): MainFragment {
-            val args = Bundle()
-            val fragment = MainFragment()
-            fragment.arguments = args
-            return fragment
-        }
+        private const val TAG = "MainFragment"
+        fun newInstance(): MainFragment = MainFragment()
+        private const val GRID_MAX_COLS=3
     }
 
 

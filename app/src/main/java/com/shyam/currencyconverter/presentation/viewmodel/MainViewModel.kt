@@ -3,6 +3,7 @@ package com.shyam.currencyconverter.presentation.viewmodel
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.shyam.currencyconverter.core.Event
 import com.shyam.currencyconverter.domain.UseCase.UseCaseCallback
 import com.shyam.currencyconverter.domain.extensions.convertToCurrencyConversionItemList
 import com.shyam.currencyconverter.domain.extensions.convertToCurrencyListString
@@ -10,24 +11,31 @@ import com.shyam.currencyconverter.domain.usecases.ConvertCurrencyUseCase
 import com.shyam.currencyconverter.domain.usecases.GetCurrencyListUseCase
 import com.shyam.currencyconverter.presentation.adapter.CurrencyConversionItem
 import com.shyam.currencyconverter.presentation.view.base.BaseViewModel
+import com.shyam.currencyconverter.util.NetworkConnectionChecker
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
 
-class MainViewModel : BaseViewModel() {
+class MainViewModel() : BaseViewModel() {
+
+
+    lateinit var networkConnectionChecker: NetworkConnectionChecker
 
     /**
-     * live data for currencyMap, currency conversion.
+     * live data for currencyMap, currency conversion, multiplier amount,network connectivity
      */
     private val _currencyConversionLiveData = MutableLiveData<List<CurrencyConversionItem>>()
     val currencyConversionData: LiveData<List<CurrencyConversionItem>> = _currencyConversionLiveData
     private val _currencyMapLiveData = MutableLiveData<Map<String, String>>()
     private val _currencyListData = MutableLiveData<List<String>>()
     val currencyListData: LiveData<List<String>> = _currencyListData
-
     private val _multiplierLiveData = MutableLiveData<BigDecimal>()
     val multiplierLiveData: LiveData<BigDecimal> = _multiplierLiveData
+    private val _networkConnectivityLiveData = MutableLiveData<Event<Boolean>>()
+    val networkConnectivityLiveData: LiveData<Event<Boolean>> = _networkConnectivityLiveData
 
     var amountBigDecimal: BigDecimal = BigDecimal(1.0)
+    var isNetworkConnected: Boolean = false
+
     override fun onCreate() {
         fetchData()
     }
@@ -44,14 +52,16 @@ class MainViewModel : BaseViewModel() {
         )
     }
 
-    fun fetchData() {
+    private fun fetchData() {
+        isNetworkConnected = networkConnectionChecker.isConnected()
+        _networkConnectivityLiveData.value = Event(isNetworkConnected)
         getCurrencyList()
     }
 
     /**
      * Heavy operation that cannot be done in the Main Thread
      */
-    fun getCurrencyList() {
+    private fun getCurrencyList() {
         ioScope.launch {
             val myUseCase = GetCurrencyListUseCase()
             myUseCase.useCaseCallback =
@@ -68,7 +78,11 @@ class MainViewModel : BaseViewModel() {
                         Log.d(TAG, t.message as String)
                     }
                 }
-            myUseCase.executeUseCase(GetCurrencyListUseCase.GetCurrencyListRequest())
+            myUseCase.executeUseCase(
+                GetCurrencyListUseCase.GetCurrencyListRequest(
+                    isNetworkConnected
+                )
+            )
         }
     }
 
@@ -76,7 +90,7 @@ class MainViewModel : BaseViewModel() {
     /**
      * Heavy operation that cannot be done in the Main Thread
      */
-    fun getConversionList(baseCurrency: String, currencyMap: Map<String, String>) {
+    private fun getConversionList(baseCurrency: String, currencyMap: Map<String, String>) {
         ioScope.launch {
             val myUseCase = ConvertCurrencyUseCase()
             myUseCase.useCaseCallback =
