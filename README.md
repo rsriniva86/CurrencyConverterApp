@@ -14,7 +14,7 @@
 - Retrofit for network calls
 
 ## Future Improvements
-- Add more unit tests
+- Add unit tests (Currently only one class is tested)
 - Handle for case when first time app is opened and there is no internet
 - Introduce Dependency injection
 - Introduce Pull to refresh UX pattern
