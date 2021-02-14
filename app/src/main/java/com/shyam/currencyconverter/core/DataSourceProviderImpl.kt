@@ -7,9 +7,7 @@ import com.shyam.currencyconverter.data.source.remote.network.RetrofitClient
 
 class DataSourceProviderImpl : DataSourceProvider {
     override fun provideLocalDataSource(): CurrencyLocalDataSource =
-        CurrencyLocalDataSource(
-            CurrencyConverterApplication.getDatabase()
-        )
+        CurrencyLocalDataSource(null)
 
     override fun provideRemoteDataSource(): CurrencyRemoteDataSource =
         CurrencyRemoteDataSource(
