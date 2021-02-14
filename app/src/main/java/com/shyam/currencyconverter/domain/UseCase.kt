@@ -6,9 +6,7 @@ abstract class UseCase<Q : UseCase.RequestValues, P : UseCase.ResponseValue> {
 
     var useCaseCallback: UseCaseCallback<P>? = null
 
-    internal suspend fun run() {
-        executeUseCase(requestValues)
-    }
+    
 
     abstract suspend fun executeUseCase(requestValues: Q?)
 

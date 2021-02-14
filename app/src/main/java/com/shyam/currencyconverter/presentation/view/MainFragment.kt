@@ -62,8 +62,11 @@ class MainFragment : BaseFragment<MainViewModel>() {
             }
 
         }
+
+        
         with(amount) {
-            filters = arrayOf<InputFilter>(DecimalDigitsInputFilter(7, 2))
+            filters =
+                arrayOf<InputFilter>(DecimalDigitsInputFilter(7, 2))
         }
         amount.afterTextChanged { viewModel.updateMultiplier(it) }
 

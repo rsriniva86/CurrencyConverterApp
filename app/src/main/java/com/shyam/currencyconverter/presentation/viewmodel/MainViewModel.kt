@@ -63,25 +63,25 @@ class MainViewModel() : BaseViewModel() {
      */
     private fun getCurrencyList() {
         ioScope.launch {
-            val myUseCase = GetCurrencyListUseCase()
-            myUseCase.useCaseCallback =
-                object : UseCaseCallback<GetCurrencyListUseCase.GetCurrencyListResponse> {
-                    override fun onSuccess(response: GetCurrencyListUseCase.GetCurrencyListResponse) {
-                        Log.d(TAG, "onSuccess")
-                        val currencyListItems = response.convertToCurrencyListString()
-                        _currencyListData.postValue(currencyListItems)
-                        this@MainViewModel._currencyMapLiveData.postValue(response.output?.currencies)
-                    }
 
-                    override fun onError(t: Throwable) {
-                        Log.d(TAG, "onError")
-                        Log.d(TAG, t.message as String)
+            val myUseCase = GetCurrencyListUseCase().apply {
+                useCaseCallback =
+                    object : UseCaseCallback<GetCurrencyListUseCase.GetCurrencyListResponse> {
+                        override fun onSuccess(response: GetCurrencyListUseCase.GetCurrencyListResponse) {
+                            Log.d(TAG, "onSuccess")
+                            val currencyListItems = response.convertToCurrencyListString()
+                            _currencyListData.postValue(currencyListItems)
+                            this@MainViewModel._currencyMapLiveData.postValue(response.output?.currencies)
+                        }
+
+                        override fun onError(t: Throwable) {
+                            Log.d(TAG, "onError")
+                            Log.d(TAG, t.message as String)
+                        }
                     }
-                }
+            }
             myUseCase.executeUseCase(
-                GetCurrencyListUseCase.GetCurrencyListRequest(
-                    isNetworkConnected
-                )
+                GetCurrencyListUseCase.GetCurrencyListRequest(isNetworkConnected)
             )
         }
     }
