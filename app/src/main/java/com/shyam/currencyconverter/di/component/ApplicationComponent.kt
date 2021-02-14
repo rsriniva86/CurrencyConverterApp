@@ -9,11 +9,16 @@ import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [ApplicationModule::class])
+@Component(
+    modules = [
+        ApplicationModule::class
+    ]
+)
 interface ApplicationComponent {
+
     fun inject(application: CurrencyConverterApplication)
     fun inject(repository: CurrencyRatesRepositoryImpl)
-    fun inject(usecase: GetCurrencyListUseCase)
-    fun inject(usecase: ConvertCurrencyUseCase)
+    fun inject(useCase: GetCurrencyListUseCase)
+    fun inject(useCase: ConvertCurrencyUseCase)
 
 }
