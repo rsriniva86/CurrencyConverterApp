@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.shyam.currencyconverter.core.Event
+import com.shyam.currencyconverter.data.repository.CurrencyRatesRepository
 import com.shyam.currencyconverter.domain.UseCase.UseCaseCallback
 import com.shyam.currencyconverter.domain.extensions.convertToCurrencyConversionItemList
 import com.shyam.currencyconverter.domain.extensions.convertToCurrencyListString
@@ -14,11 +15,11 @@ import com.shyam.currencyconverter.presentation.view.base.BaseViewModel
 import com.shyam.currencyconverter.util.NetworkConnectionChecker
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
+import javax.inject.Inject
 
-class MainViewModel() : BaseViewModel() {
-
-
-    lateinit var networkConnectionChecker: NetworkConnectionChecker
+class MainViewModel @Inject constructor(
+    var networkConnectionChecker: NetworkConnectionChecker,
+    var repository: CurrencyRatesRepository) : BaseViewModel() {
 
     /**
      * live data for currencyMap, currency conversion, multiplier amount,network connectivity

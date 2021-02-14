@@ -9,6 +9,12 @@ import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import com.shyam.currencyconverter.CurrencyConverterApplication
+import com.shyam.currencyconverter.di.component.DaggerActivityComponent
+import com.shyam.currencyconverter.di.component.DaggerFragmentComponent
+import com.shyam.currencyconverter.di.component.FragmentComponent
+import com.shyam.currencyconverter.di.module.FragmentModule
+import javax.inject.Inject
 
 
 /**
@@ -17,13 +23,22 @@ import androidx.lifecycle.Observer
  */
 abstract class BaseFragment<VM : BaseViewModel> : Fragment() {
 
+    @Inject
     open lateinit var viewModel: VM
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
+        injectDependencies(buildFragmentComponent())
         super.onCreate(savedInstanceState)
         viewModel.onCreate()
     }
+
+    private fun buildFragmentComponent() =
+        DaggerFragmentComponent
+            .builder()
+            .applicationComponent((context!!.applicationContext as CurrencyConverterApplication).applicationComponent)
+            .fragmentModule(FragmentModule(this))
+            .build()
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -60,6 +75,9 @@ abstract class BaseFragment<VM : BaseViewModel> : Fragment() {
 
     @LayoutRes
     protected abstract fun provideLayoutId(): Int
+
+    protected abstract fun injectDependencies(fragmentComponent: FragmentComponent)
+
 
     protected abstract fun setupView(view: View)
 }

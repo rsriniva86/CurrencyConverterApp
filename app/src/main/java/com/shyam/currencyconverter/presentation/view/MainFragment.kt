@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.shyam.currencyconverter.R
+import com.shyam.currencyconverter.di.component.FragmentComponent
 import com.shyam.currencyconverter.presentation.adapter.CurrencyConversionAdapter
 import com.shyam.currencyconverter.presentation.adapter.CurrencyListAdapter
 import com.shyam.currencyconverter.presentation.extensions.afterTextChanged
@@ -73,9 +74,9 @@ class MainFragment : BaseFragment<MainViewModel>() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java).apply {
-            networkConnectionChecker = NetworkConnectionCheckerImpl(context = requireContext())
-        }
+//        viewModel = ViewModelProvider(this).get(MainViewModel::class.java).apply {
+//            networkConnectionChecker = NetworkConnectionCheckerImpl(context = requireContext())
+//        }
         super.onCreate(savedInstanceState)
     }
 
@@ -105,10 +106,16 @@ class MainFragment : BaseFragment<MainViewModel>() {
 
     }
 
+
+
     companion object {
         private const val TAG = "MainFragment"
         fun newInstance(): MainFragment = MainFragment()
         private const val GRID_MAX_COLS = 3
+    }
+
+    override fun injectDependencies(fragmentComponent: FragmentComponent) {
+        fragmentComponent.inject(this)
     }
 
 

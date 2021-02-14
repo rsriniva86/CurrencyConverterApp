@@ -9,6 +9,9 @@ import com.shyam.currencyconverter.data.source.local.CurrencyLocalDataSource
 import com.shyam.currencyconverter.data.source.local.database.CurrencyDatabase
 import com.shyam.currencyconverter.data.source.remote.CurrencyRemoteDataSource
 import com.shyam.currencyconverter.data.source.remote.network.RetrofitClient
+import com.shyam.currencyconverter.di.scope.ActivityScope
+import com.shyam.currencyconverter.util.NetworkConnectionChecker
+import com.shyam.currencyconverter.util.NetworkConnectionCheckerImpl
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -45,5 +48,11 @@ class ApplicationModule(private val application: CurrencyConverterApplication) {
     @Provides
     @Singleton
     fun providesCurrencyRatesRepository(): CurrencyRatesRepository = CurrencyRatesRepositoryImpl()
+
+    @Provides
+    @Singleton
+    fun providesNetworkChecker(): NetworkConnectionChecker =
+        NetworkConnectionCheckerImpl(application)
+
 
 }
