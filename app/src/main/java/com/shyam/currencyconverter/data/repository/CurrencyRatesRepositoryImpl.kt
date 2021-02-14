@@ -2,7 +2,6 @@ package com.shyam.currencyconverter.data.repository
 
 import android.util.Log
 import com.shyam.currencyconverter.CurrencyConverterApplication
-import com.shyam.currencyconverter.core.DataSourceProvider
 import com.shyam.currencyconverter.data.source.local.CurrencyLocalDataSource
 import com.shyam.currencyconverter.data.source.local.database.CurrencyDatabase
 import com.shyam.currencyconverter.data.source.local.database.entities.CurrencyList
@@ -11,31 +10,31 @@ import com.shyam.currencyconverter.data.source.remote.CurrencyRemoteDataSource
 import javax.inject.Inject
 
 
-class CurrencyRatesRepositoryImpl (
-    val dataSourceProvider: DataSourceProvider
-) : CurrencyRatesRepository {
+class CurrencyRatesRepositoryImpl : CurrencyRatesRepository {
 
     @Inject
-    lateinit var currencyDatabase:CurrencyDatabase;
+    lateinit var currencyDatabase: CurrencyDatabase;
+
     @Inject
-    lateinit var localDataSource:CurrencyLocalDataSource;
+    lateinit var localDataSource: CurrencyLocalDataSource;
+
     @Inject
     lateinit var remoteDataSource: CurrencyRemoteDataSource;
 
     init {
-        Log.d(TAG,"init")
-        CurrencyConverterApplication.getApplication()?.let{
-            Log.d(TAG,"Injection code")
+        Log.d(TAG, "init")
+        CurrencyConverterApplication.getApplication()?.let {
+            Log.d(TAG, "Injection code")
             it.applicationComponent.inject(this)
         }
         currencyDatabase?.let {
-            Log.d(TAG,"currencyDatabase is not null")
+            Log.d(TAG, "currencyDatabase is not null")
         }
         localDataSource?.let {
-            Log.d(TAG,"localDataSource is not null")
+            Log.d(TAG, "localDataSource is not null")
         }
         remoteDataSource?.let {
-            Log.d(TAG,"remoteDataSource is not null")
+            Log.d(TAG, "remoteDataSource is not null")
         }
     }
 

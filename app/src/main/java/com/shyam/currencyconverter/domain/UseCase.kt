@@ -1,5 +1,8 @@
 package com.shyam.currencyconverter.domain
 
+import com.shyam.currencyconverter.data.repository.CurrencyRatesRepository
+import javax.inject.Inject
+
 abstract class UseCase<Q : UseCase.RequestValues, P : UseCase.ResponseValue> {
 
     var requestValues: Q? = null

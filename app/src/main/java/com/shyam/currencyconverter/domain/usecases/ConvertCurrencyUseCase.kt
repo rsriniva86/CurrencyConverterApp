@@ -1,7 +1,7 @@
 package com.shyam.currencyconverter.domain.usecases
 
 import android.util.Log
-import com.shyam.currencyconverter.core.DataSourceProviderImpl
+import com.shyam.currencyconverter.CurrencyConverterApplication
 import com.shyam.currencyconverter.data.repository.CurrencyRatesRepository
 import com.shyam.currencyconverter.data.repository.CurrencyRatesRepositoryImpl
 import com.shyam.currencyconverter.data.repository.Result
@@ -9,9 +9,18 @@ import com.shyam.currencyconverter.data.source.local.database.entities.CurrencyR
 import com.shyam.currencyconverter.domain.UseCase
 import com.shyam.currencyconverter.util.TimestampCalculation
 import java.math.BigDecimal
+import javax.inject.Inject
 
 class ConvertCurrencyUseCase :
     UseCase<ConvertCurrencyUseCase.ConvertCurrencyRequest, ConvertCurrencyUseCase.ConvertCurrencyResponse>() {
+    @Inject
+    lateinit var repository:CurrencyRatesRepository
+
+    init {
+        CurrencyConverterApplication.getApplication()?.let {
+            it.applicationComponent.inject(this);
+        }
+    }
 
     data class ConvertCurrencyRequest(
         val baseCurrency: String,
@@ -22,8 +31,6 @@ class ConvertCurrencyUseCase :
     data class ConvertCurrencyResponse(val output: Map<String, BigDecimal>) : ResponseValue
 
     override suspend fun executeUseCase(requestValues: ConvertCurrencyRequest?) {
-        val repository: CurrencyRatesRepository =
-            CurrencyRatesRepositoryImpl(dataSourceProvider = DataSourceProviderImpl())
 
         val savedCurrencyRates = repository.getSavedCurrencyRates(BASE_CURRENCY_INTERNAL)
 

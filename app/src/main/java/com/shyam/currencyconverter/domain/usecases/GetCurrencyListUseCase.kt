@@ -1,16 +1,26 @@
 package com.shyam.currencyconverter.domain.usecases
 
 import android.util.Log
-import com.shyam.currencyconverter.core.DataSourceProviderImpl
+import com.shyam.currencyconverter.CurrencyConverterApplication
 import com.shyam.currencyconverter.data.repository.CurrencyRatesRepository
 import com.shyam.currencyconverter.data.repository.CurrencyRatesRepositoryImpl
 import com.shyam.currencyconverter.data.source.local.database.entities.CurrencyList
 import com.shyam.currencyconverter.domain.UseCase
 import com.shyam.currencyconverter.util.TimestampCalculation
+import javax.inject.Inject
 
 class GetCurrencyListUseCase :
-    UseCase<GetCurrencyListUseCase.GetCurrencyListRequest, GetCurrencyListUseCase.GetCurrencyListResponse>() {
+    UseCase<GetCurrencyListUseCase.GetCurrencyListRequest,
+            GetCurrencyListUseCase.GetCurrencyListResponse>() {
 
+    @Inject
+    lateinit var repository:CurrencyRatesRepository
+
+    init {
+        CurrencyConverterApplication.getApplication()?.let {
+            it.applicationComponent.inject(this);
+        }
+    }
 
     class GetCurrencyListRequest(val isNetworkConnected: Boolean) : RequestValues
     data class GetCurrencyListResponse(val output: CurrencyList?) : ResponseValue
@@ -18,8 +28,6 @@ class GetCurrencyListUseCase :
     override suspend fun executeUseCase(requestValues: GetCurrencyListRequest?) {
         Log.d(CurrencyRatesRepositoryImpl.TAG, "executeUseCase")
 
-        val repository: CurrencyRatesRepository =
-            CurrencyRatesRepositoryImpl(dataSourceProvider = DataSourceProviderImpl())
         Log.d(CurrencyRatesRepositoryImpl.TAG, "repository object created")
 
         //get data from local source

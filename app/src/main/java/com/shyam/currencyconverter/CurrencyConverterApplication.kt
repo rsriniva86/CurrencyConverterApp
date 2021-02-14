@@ -12,42 +12,37 @@ import javax.inject.Inject
 
 
 class CurrencyConverterApplication : Application() {
-
     lateinit var applicationComponent: ApplicationComponent
-
     @Inject
     lateinit var currencyDatabase: CurrencyDatabase
-
     @Inject
     lateinit var context: Context
 
     override fun onCreate() {
         super.onCreate()
-        application=this;
+        application = this;
         injectDependencies()
+
         currencyDatabase?.let {
-            Log.i(TAG,"Database object is injected")
+            Log.i(TAG, "Database object is injected")
         }
+
     }
 
     private fun injectDependencies() {
-        applicationComponent= DaggerApplicationComponent
+        applicationComponent = DaggerApplicationComponent
             .builder()
             .applicationModule(ApplicationModule(this))
             .build()
-
         applicationComponent.inject(this)
     }
 
-    companion object{
+    companion object {
         val TAG: String? = CurrencyConverterApplication::class.simpleName
-        private var application:CurrencyConverterApplication?=null
-        fun getApplication():CurrencyConverterApplication?{
+        private var application: CurrencyConverterApplication? = null
+        fun getApplication(): CurrencyConverterApplication? {
             return application;
         }
     }
-
-
-
 
 }

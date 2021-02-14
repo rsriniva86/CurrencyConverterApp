@@ -1,6 +1,5 @@
 package com.shyam.currencyconverter.core
 
-import com.shyam.currencyconverter.CurrencyConverterApplication
 import com.shyam.currencyconverter.data.source.local.CurrencyLocalDataSource
 import com.shyam.currencyconverter.data.source.remote.CurrencyRemoteDataSource
 import com.shyam.currencyconverter.data.source.remote.network.RetrofitClient
