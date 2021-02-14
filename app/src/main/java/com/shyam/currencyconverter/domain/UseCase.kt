@@ -6,7 +6,6 @@ abstract class UseCase<Q : UseCase.RequestValues, P : UseCase.ResponseValue> {
 
     var useCaseCallback: UseCaseCallback<P>? = null
 
-    
 
     abstract suspend fun executeUseCase(requestValues: Q?)
 

@@ -63,7 +63,7 @@ class MainFragment : BaseFragment<MainViewModel>() {
 
         }
 
-        
+
         with(amount) {
             filters =
                 arrayOf<InputFilter>(DecimalDigitsInputFilter(7, 2))

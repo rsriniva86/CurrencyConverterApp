@@ -17,10 +17,10 @@ internal object Result {
         if (divisor == 0) {
             return arrayOf()
         }
-        var index=0;
+        var index = 0;
         for (value in inputArray) {
             var dividedValue = value / divisor
-            val remainder = Math.floorMod(value,divisor)
+            val remainder = Math.floorMod(value, divisor)
             val isdivisorEven = divisor % 2 == 0
             if (isdivisorEven) {
                 if (remainder > divisor / 2) {
