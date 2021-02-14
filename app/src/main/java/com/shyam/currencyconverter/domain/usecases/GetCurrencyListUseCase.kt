@@ -14,7 +14,7 @@ class GetCurrencyListUseCase :
             GetCurrencyListUseCase.GetCurrencyListResponse>() {
 
     @Inject
-    lateinit var repository:CurrencyRatesRepository
+    lateinit var repository: CurrencyRatesRepository
 
     init {
         CurrencyConverterApplication.getApplication()?.let {

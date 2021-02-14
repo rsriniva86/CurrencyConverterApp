@@ -9,7 +9,6 @@ import com.shyam.currencyconverter.data.source.local.CurrencyLocalDataSource
 import com.shyam.currencyconverter.data.source.local.database.CurrencyDatabase
 import com.shyam.currencyconverter.data.source.remote.CurrencyRemoteDataSource
 import com.shyam.currencyconverter.data.source.remote.network.RetrofitClient
-import com.shyam.currencyconverter.domain.usecases.ConvertCurrencyUseCase
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton

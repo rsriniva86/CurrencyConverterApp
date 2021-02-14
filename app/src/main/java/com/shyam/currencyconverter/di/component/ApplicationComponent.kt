@@ -3,7 +3,6 @@ package com.shyam.currencyconverter.di.component
 import com.shyam.currencyconverter.CurrencyConverterApplication
 import com.shyam.currencyconverter.data.repository.CurrencyRatesRepositoryImpl
 import com.shyam.currencyconverter.di.module.ApplicationModule
-import com.shyam.currencyconverter.domain.UseCase
 import com.shyam.currencyconverter.domain.usecases.ConvertCurrencyUseCase
 import com.shyam.currencyconverter.domain.usecases.GetCurrencyListUseCase
 import dagger.Component

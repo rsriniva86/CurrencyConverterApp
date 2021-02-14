@@ -14,7 +14,7 @@ import javax.inject.Inject
 class ConvertCurrencyUseCase :
     UseCase<ConvertCurrencyUseCase.ConvertCurrencyRequest, ConvertCurrencyUseCase.ConvertCurrencyResponse>() {
     @Inject
-    lateinit var repository:CurrencyRatesRepository
+    lateinit var repository: CurrencyRatesRepository
 
     init {
         CurrencyConverterApplication.getApplication()?.let {

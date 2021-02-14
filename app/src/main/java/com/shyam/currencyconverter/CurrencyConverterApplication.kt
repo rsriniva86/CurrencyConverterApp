@@ -13,8 +13,10 @@ import javax.inject.Inject
 
 class CurrencyConverterApplication : Application() {
     lateinit var applicationComponent: ApplicationComponent
+
     @Inject
     lateinit var currencyDatabase: CurrencyDatabase
+
     @Inject
     lateinit var context: Context
 
