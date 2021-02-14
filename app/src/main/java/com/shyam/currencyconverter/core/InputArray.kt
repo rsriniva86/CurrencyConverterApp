@@ -2,6 +2,7 @@ package com.shyam.currencyconverter.core
 
 import java.io.*
 import java.util.*
+import java.util.stream.Collectors
 
 internal object Result {
     /*
@@ -20,7 +21,11 @@ internal object Result {
         var index = 0;
         for (value in inputArray) {
             var dividedValue = value / divisor
-            val remainder = Math.floorMod(value, divisor)
+            val remainder = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                Math.floorMod(value, divisor)
+            } else {
+               value%divisor;
+            }
             val isdivisorEven = divisor % 2 == 0
             if (isdivisorEven) {
                 if (remainder > divisor / 2) {
@@ -52,7 +57,9 @@ object InputArray {
             inputArray.add(inputArrayItem)
         }
         val divisor = bufferedReader.readLine().trim { it <= ' ' }.toInt()
-        val result = Result.ComputeDivision(inputArray, divisor)
+        val inputArrayOfInts: Array<Int> = inputArray.toTypedArray()
+        val result = Result.ComputeDivision(
+            inputArrayOfInts, divisor)
         for (i in result.indices) {
             bufferedWriter.write(result[i].toString())
             if (i != result.size - 1) {
