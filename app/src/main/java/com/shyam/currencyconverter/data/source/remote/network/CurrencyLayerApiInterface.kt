@@ -15,8 +15,7 @@ interface CurrencyLayerApiInterface {
     suspend fun getCurrencyRates(
         @Query("access_key") access_key: String,
         @Query("source") source: String
-    )
-            : Response<GetCurrencyRatesResponse>
+    ): Response<GetCurrencyRatesResponse>
 
     companion object {
         const val BASE_URL = "http://api.currencylayer.com"

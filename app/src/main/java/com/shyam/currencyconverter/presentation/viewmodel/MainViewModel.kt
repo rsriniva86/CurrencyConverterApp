@@ -3,23 +3,25 @@ package com.shyam.currencyconverter.presentation.viewmodel
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.shyam.currencyconverter.core.Event
-import com.shyam.currencyconverter.data.repository.CurrencyRatesRepository
 import com.shyam.currencyconverter.domain.UseCase.UseCaseCallback
 import com.shyam.currencyconverter.domain.extensions.convertToCurrencyConversionItemList
 import com.shyam.currencyconverter.domain.extensions.convertToCurrencyListString
 import com.shyam.currencyconverter.domain.usecases.ConvertCurrencyUseCase
-import com.shyam.currencyconverter.domain.usecases.GetCurrencyListUseCase
+import com.shyam.currencyconverter.domain.usecases.CurrencyListUseCase
 import com.shyam.currencyconverter.presentation.adapter.CurrencyConversionItem
 import com.shyam.currencyconverter.presentation.view.base.BaseViewModel
 import com.shyam.currencyconverter.util.NetworkConnectionChecker
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import java.math.BigDecimal
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(
-    var networkConnectionChecker: NetworkConnectionChecker,
-    var repository: CurrencyRatesRepository) : BaseViewModel() {
+    private val networkConnectionChecker: NetworkConnectionChecker,
+    private val convertCurrencyUseCase: ConvertCurrencyUseCase,
+    private val currencyListUseCase: CurrencyListUseCase
+    ) : BaseViewModel() {
 
     /**
      * live data for currencyMap, currency conversion, multiplier amount,network connectivity
@@ -63,27 +65,31 @@ class MainViewModel @Inject constructor(
      * Heavy operation that cannot be done in the Main Thread
      */
     private fun getCurrencyList() {
-        ioScope.launch {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO){
 
-            val myUseCase = GetCurrencyListUseCase().apply {
-                useCaseCallback =
-                    object : UseCaseCallback<GetCurrencyListUseCase.GetCurrencyListResponse> {
-                        override fun onSuccess(response: GetCurrencyListUseCase.GetCurrencyListResponse) {
-                            Log.d(TAG, "onSuccess")
-                            val currencyListItems = response.convertToCurrencyListString()
-                            _currencyListData.postValue(currencyListItems)
-                            this@MainViewModel._currencyMapLiveData.postValue(response.output?.currencies)
-                        }
+                currencyListUseCase.apply {
 
-                        override fun onError(t: Throwable) {
-                            Log.d(TAG, "onError")
-                            Log.d(TAG, t.message as String)
+                    this.useCaseCallback =
+                        object : UseCaseCallback<CurrencyListUseCase.GetCurrencyListResponse> {
+                            override fun onSuccess(response: CurrencyListUseCase.GetCurrencyListResponse) {
+                                Log.d(TAG, "onSuccess")
+                                val currencyListItems = response.convertToCurrencyListString()
+                                _currencyListData.postValue(currencyListItems)
+                                this@MainViewModel._currencyMapLiveData.postValue(response.output?.currencies)
+                            }
+
+                            override fun onError(t: Throwable) {
+                                Log.d(TAG, "onError")
+                                Log.d(TAG, t.message as String)
+                            }
                         }
-                    }
+                }
+                currencyListUseCase.executeUseCase(
+                    CurrencyListUseCase.GetCurrencyListRequest(isNetworkConnected)
+                )
             }
-            myUseCase.executeUseCase(
-                GetCurrencyListUseCase.GetCurrencyListRequest(isNetworkConnected)
-            )
+
         }
     }
 
@@ -92,31 +98,33 @@ class MainViewModel @Inject constructor(
      * Heavy operation that cannot be done in the Main Thread
      */
     private fun getConversionList(baseCurrency: String, currencyMap: Map<String, String>) {
-        ioScope.launch {
-            val myUseCase = ConvertCurrencyUseCase()
-            myUseCase.useCaseCallback =
-                object : UseCaseCallback<ConvertCurrencyUseCase.ConvertCurrencyResponse> {
-                    override fun onSuccess(response: ConvertCurrencyUseCase.ConvertCurrencyResponse) {
-                        Log.d(TAG, "onSuccess")
-                        val listOfConversionItems = response.convertToCurrencyConversionItemList(
-                            _multiplierLiveData.value ?: BigDecimal(1.0)
-                        )
-                        _currencyConversionLiveData.postValue(listOfConversionItems)
-                    }
+        viewModelScope.launch {
+            withContext(Dispatchers.IO){
+                convertCurrencyUseCase.useCaseCallback =
+                    object : UseCaseCallback<ConvertCurrencyUseCase.ConvertCurrencyResponse> {
+                        override fun onSuccess(response: ConvertCurrencyUseCase.ConvertCurrencyResponse) {
+                            Log.d(TAG, "onSuccess")
+                            val listOfConversionItems = response.convertToCurrencyConversionItemList(
+                                _multiplierLiveData.value ?: BigDecimal(1.0)
+                            )
+                            _currencyConversionLiveData.postValue(listOfConversionItems)
+                        }
 
-                    override fun onError(t: Throwable) {
-                        Log.d(TAG, "onError")
-                        Log.d(TAG, t.message as String)
-                    }
+                        override fun onError(t: Throwable) {
+                            Log.d(TAG, "onError")
+                            Log.d(TAG, t.message as String)
+                        }
 
-                }
-            myUseCase.executeUseCase(
-                ConvertCurrencyUseCase.ConvertCurrencyRequest(
-                    baseCurrency = baseCurrency,
-                    currencyMap = currencyMap,
-                    isNetworkConnected = isNetworkConnected
+                    }
+                convertCurrencyUseCase.executeUseCase(
+                    ConvertCurrencyUseCase.ConvertCurrencyRequest(
+                        baseCurrency = baseCurrency,
+                        currencyMap = currencyMap,
+                        isNetworkConnected = isNetworkConnected
+                    )
                 )
-            )
+
+            }
 
         }
     }
@@ -124,5 +132,11 @@ class MainViewModel @Inject constructor(
 
     companion object {
         private val TAG = MainViewModel::class.simpleName
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+
+
     }
 }

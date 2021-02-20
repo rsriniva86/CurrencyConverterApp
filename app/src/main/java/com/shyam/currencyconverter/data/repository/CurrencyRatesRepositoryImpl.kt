@@ -2,28 +2,25 @@ package com.shyam.currencyconverter.data.repository
 
 import android.util.Log
 import com.shyam.currencyconverter.CurrencyConverterApplication
+import com.shyam.currencyconverter.data.source.CurrencyDataSource
 import com.shyam.currencyconverter.data.source.local.CurrencyLocalDataSource
 import com.shyam.currencyconverter.data.source.local.database.entities.CurrencyList
 import com.shyam.currencyconverter.data.source.local.database.entities.CurrencyRates
 import com.shyam.currencyconverter.data.source.remote.CurrencyRemoteDataSource
 import javax.inject.Inject
+import javax.inject.Named
 
 
-class CurrencyRatesRepositoryImpl : CurrencyRatesRepository {
-
-
-    @Inject
-    lateinit var localDataSource: CurrencyLocalDataSource;
-
-    @Inject
-    lateinit var remoteDataSource: CurrencyRemoteDataSource;
+class CurrencyRatesRepositoryImpl @Inject constructor(
+    @Named("CurrencyLocalDataSource")
+    private val localDataSource: CurrencyDataSource,
+    @Named ("CurrencyRemoteDataSource")
+    private val remoteDataSource: CurrencyDataSource
+): CurrencyRatesRepository {
 
     init {
         Log.d(TAG, "init")
-        CurrencyConverterApplication.getApplication()?.let {
-            Log.d(TAG, "Injection code")
-            it.applicationComponent.inject(this)
-        }
+
         localDataSource?.let {
             Log.d(TAG, "localDataSource is not null")
         }

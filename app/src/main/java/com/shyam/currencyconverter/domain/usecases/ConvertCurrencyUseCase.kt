@@ -11,16 +11,8 @@ import com.shyam.currencyconverter.util.TimestampCalculation
 import java.math.BigDecimal
 import javax.inject.Inject
 
-class ConvertCurrencyUseCase :
+class ConvertCurrencyUseCase @Inject constructor(private val repository: CurrencyRatesRepository):
     UseCase<ConvertCurrencyUseCase.ConvertCurrencyRequest, ConvertCurrencyUseCase.ConvertCurrencyResponse>() {
-    @Inject
-    lateinit var repository: CurrencyRatesRepository
-
-    init {
-        CurrencyConverterApplication.getApplication()?.let {
-            it.applicationComponent.inject(this);
-        }
-    }
 
     data class ConvertCurrencyRequest(
         val baseCurrency: String,
@@ -31,6 +23,7 @@ class ConvertCurrencyUseCase :
     data class ConvertCurrencyResponse(val output: Map<String, BigDecimal>) : ResponseValue
 
     override suspend fun executeUseCase(requestValues: ConvertCurrencyRequest?) {
+
 
         val savedCurrencyRates = repository.getSavedCurrencyRates(BASE_CURRENCY_INTERNAL)
 

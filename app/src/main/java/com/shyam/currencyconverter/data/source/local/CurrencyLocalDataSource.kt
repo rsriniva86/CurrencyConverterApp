@@ -8,11 +8,11 @@ import com.shyam.currencyconverter.data.source.local.database.entities.CurrencyL
 import com.shyam.currencyconverter.data.source.local.database.entities.CurrencyRates
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import javax.inject.Inject
 
 
-class CurrencyLocalDataSource constructor(
-    private val appDatabase: CurrencyDatabase?,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+class CurrencyLocalDataSource @Inject constructor(
+    private val appDatabase: CurrencyDatabase
 ) :
     CurrencyDataSource {
 

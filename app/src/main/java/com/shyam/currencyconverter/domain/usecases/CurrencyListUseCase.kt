@@ -9,18 +9,17 @@ import com.shyam.currencyconverter.domain.UseCase
 import com.shyam.currencyconverter.util.TimestampCalculation
 import javax.inject.Inject
 
-class GetCurrencyListUseCase :
-    UseCase<GetCurrencyListUseCase.GetCurrencyListRequest,
-            GetCurrencyListUseCase.GetCurrencyListResponse>() {
+class CurrencyListUseCase @Inject constructor(
+    private val repository: CurrencyRatesRepository
+):
+    UseCase<CurrencyListUseCase.GetCurrencyListRequest,
+            CurrencyListUseCase.GetCurrencyListResponse>() {
 
-    @Inject
-    lateinit var repository: CurrencyRatesRepository
-
-    init {
-        CurrencyConverterApplication.getApplication()?.let {
-            it.applicationComponent.inject(this);
-        }
-    }
+//    init {
+//        CurrencyConverterApplication.getApplication()?.let {
+//            it.applicationComponent.inject(this);
+//        }
+//    }
 
     class GetCurrencyListRequest(val isNetworkConnected: Boolean) : RequestValues
     data class GetCurrencyListResponse(val output: CurrencyList?) : ResponseValue
@@ -59,6 +58,6 @@ class GetCurrencyListUseCase :
     }
 
     companion object {
-        private val TAG = GetCurrencyListUseCase::class.simpleName
+        private val TAG = CurrencyListUseCase::class.simpleName
     }
 }

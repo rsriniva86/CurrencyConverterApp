@@ -10,8 +10,10 @@ import com.shyam.currencyconverter.data.source.local.database.entities.CurrencyR
 import com.shyam.currencyconverter.data.source.remote.network.CurrencyLayerApiInterface
 import com.shyam.currencyconverter.util.Constants
 import com.shyam.currencyconverter.util.TimestampCalculation
+import javax.inject.Inject
 
-class CurrencyRemoteDataSource(private val currencyLayerApiInterface: CurrencyLayerApiInterface) :
+class CurrencyRemoteDataSource @Inject constructor(
+    private val currencyLayerApiInterface: CurrencyLayerApiInterface) :
     CurrencyDataSource {
 
 
