@@ -2,13 +2,11 @@ package com.shyam.currencyconverter.presentation.adapter
 
 import android.os.Build
 import android.text.Html
-import android.view.View
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.shyam.currencyconverter.R
-import com.shyam.currencyconverter.presentation.extensions.inflate
-import kotlinx.android.synthetic.main.item_currency_conversion_card.view.*
+import com.shyam.currencyconverter.databinding.ItemCurrencyConversionCardBinding
 import java.math.BigDecimal
 import java.math.RoundingMode
 
@@ -16,8 +14,9 @@ class CurrencyConversionAdapter :
     RecyclerView.Adapter<CurrencyConversionAdapter.CurrencyViewHolder>() {
 
     val conversionList = mutableListOf<CurrencyConversionItem>()
+    private lateinit var binding: ItemCurrencyConversionCardBinding
 
-    class CurrencyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class CurrencyViewHolder(itemView: ItemCurrencyConversionCardBinding) : RecyclerView.ViewHolder(itemView.root) {
         val currencyRateTextView: TextView = itemView.currencyRateTextView
         fun bind(item: CurrencyConversionItem) {
             val decimalMutipliedValue =
@@ -38,8 +37,8 @@ class CurrencyConversionAdapter :
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CurrencyViewHolder {
-        val inflatedView = parent.inflate(R.layout.item_currency_conversion_card, false)
-        return CurrencyViewHolder(inflatedView)
+        binding= ItemCurrencyConversionCardBinding.inflate(LayoutInflater.from(parent.context!!), parent, false)
+        return CurrencyViewHolder(binding)
     }
 
     override fun getItemCount(): Int = conversionList.size

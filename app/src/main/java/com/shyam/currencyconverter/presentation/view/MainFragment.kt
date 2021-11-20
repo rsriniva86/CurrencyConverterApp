@@ -3,34 +3,52 @@ package com.shyam.currencyconverter.presentation.view
 import android.os.Bundle
 import android.text.InputFilter
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
-import com.shyam.currencyconverter.R
-import com.shyam.currencyconverter.di.component.FragmentComponent
+import androidx.viewbinding.ViewBinding
+import com.shyam.currencyconverter.databinding.MainFragmentBinding
 import com.shyam.currencyconverter.presentation.adapter.CurrencyConversionAdapter
 import com.shyam.currencyconverter.presentation.adapter.CurrencyListAdapter
 import com.shyam.currencyconverter.presentation.extensions.afterTextChanged
 import com.shyam.currencyconverter.presentation.utils.DecimalDigitsInputFilter
-import com.shyam.currencyconverter.presentation.view.base.BaseFragment
 import com.shyam.currencyconverter.presentation.viewmodel.MainViewModel
-import com.shyam.currencyconverter.util.NetworkConnectionCheckerImpl
-import kotlinx.android.synthetic.main.main_fragment.*
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
+class MainFragment : Fragment() {
 
-class MainFragment : BaseFragment<MainViewModel>() {
-
-    override fun provideLayoutId(): Int = R.layout.main_fragment
+    val viewModel: MainViewModel by viewModels()
+    private lateinit var binding: MainFragmentBinding
 
     private val currencyConversionAdapter: CurrencyConversionAdapter = CurrencyConversionAdapter()
     private lateinit var currencyListAdapter: CurrencyListAdapter
 
-    override fun setupView(view: View) {
 
-        with(currencyConversionRecyclerView) {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding=MainFragmentBinding.inflate(layoutInflater)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupObservers()
+        setupView(view)
+    }
+
+     private fun setupView(view: View) {
+
+        with(binding.currencyConversionRecyclerView) {
             layoutManager = GridLayoutManager(context, GRID_MAX_COLS)
             adapter = currencyConversionAdapter
         }
@@ -38,12 +56,12 @@ class MainFragment : BaseFragment<MainViewModel>() {
         context?.let {
             currencyListAdapter =
                 CurrencyListAdapter(
-                    currencyListSpinner,
+                    binding.currencyListSpinner,
                     it,
                     android.R.layout.simple_spinner_dropdown_item,
                     mutableListOf<String>()
                 )
-            with(currencyListSpinner) {
+            with(binding.currencyListSpinner) {
                 adapter = currencyListAdapter
                 onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                     override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -65,23 +83,22 @@ class MainFragment : BaseFragment<MainViewModel>() {
         }
 
 
-        with(amount) {
+        with(binding.amount) {
             filters =
                 arrayOf<InputFilter>(DecimalDigitsInputFilter(7, 2))
         }
-        amount.afterTextChanged { viewModel.updateMultiplier(it) }
+        binding.amount.afterTextChanged { viewModel.updateMultiplier(it) }
 
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-//        viewModel = ViewModelProvider(this).get(MainViewModel::class.java).apply {
-//            networkConnectionChecker = NetworkConnectionCheckerImpl(context = requireContext())
-//        }
+
         super.onCreate(savedInstanceState)
+        viewModel.onCreate()
+
     }
 
-    override fun setupObservers() {
-        super.setupObservers()
+     fun setupObservers() {
         viewModel.currencyListData.observe(viewLifecycleOwner, Observer {
             currencyListAdapter.updateArray(it)
             currencyListAdapter.selectDefaultItem("JPY")
@@ -114,9 +131,7 @@ class MainFragment : BaseFragment<MainViewModel>() {
         private const val GRID_MAX_COLS = 3
     }
 
-    override fun injectDependencies(fragmentComponent: FragmentComponent) {
-        fragmentComponent.inject(this)
-    }
+
 
 
 }

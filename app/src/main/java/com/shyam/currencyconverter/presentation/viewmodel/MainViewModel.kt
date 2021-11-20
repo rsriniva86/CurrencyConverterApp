@@ -1,8 +1,10 @@
 package com.shyam.currencyconverter.presentation.viewmodel
 
 import android.util.Log
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shyam.currencyconverter.core.Event
 import com.shyam.currencyconverter.domain.UseCase.UseCaseCallback
@@ -11,18 +13,32 @@ import com.shyam.currencyconverter.domain.extensions.convertToCurrencyListString
 import com.shyam.currencyconverter.domain.usecases.ConvertCurrencyUseCase
 import com.shyam.currencyconverter.domain.usecases.CurrencyListUseCase
 import com.shyam.currencyconverter.presentation.adapter.CurrencyConversionItem
-import com.shyam.currencyconverter.presentation.view.base.BaseViewModel
 import com.shyam.currencyconverter.util.NetworkConnectionChecker
 import kotlinx.coroutines.*
 import java.math.BigDecimal
-import javax.inject.Inject
 
-class MainViewModel @Inject constructor(
+
+public class MainViewModel @ViewModelInject public constructor(
     private val networkConnectionChecker: NetworkConnectionChecker,
     private val convertCurrencyUseCase: ConvertCurrencyUseCase,
     private val currencyListUseCase: CurrencyListUseCase
-    ) : BaseViewModel() {
+    ) : ViewModel() {
 
+
+    /**
+     * This is the job for all coroutines started by this ViewModel.
+     * Cancelling this job will cancel all coroutines started by this ViewModel.
+     */
+    private val viewModelJob = SupervisorJob()
+
+    /**
+     * This is the main scope for all coroutines launched by MainViewModel.
+     * Since we pass viewModelJob, you can cancel all coroutines
+     * launched by uiScope by calling viewModelJob.cancel()
+     */
+    protected val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
+
+    protected val ioScope = CoroutineScope(Dispatchers.IO + viewModelJob)
     /**
      * live data for currencyMap, currency conversion, multiplier amount,network connectivity
      */
@@ -39,7 +55,7 @@ class MainViewModel @Inject constructor(
     private var amountBigDecimal: BigDecimal = BigDecimal(1.0)
     private var isNetworkConnected: Boolean = false
 
-    override fun onCreate() {
+     fun onCreate() {
         fetchData()
     }
 
@@ -136,7 +152,7 @@ class MainViewModel @Inject constructor(
 
     override fun onCleared() {
         super.onCleared()
-
+        viewModelJob.cancel()
 
     }
 }

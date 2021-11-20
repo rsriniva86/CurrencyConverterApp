@@ -5,14 +5,11 @@ import android.app.Application
 import android.content.Context
 import android.util.Log
 import com.shyam.currencyconverter.data.source.local.database.CurrencyDatabase
-import com.shyam.currencyconverter.di.component.ApplicationComponent
-import com.shyam.currencyconverter.di.component.DaggerApplicationComponent
-import com.shyam.currencyconverter.di.module.ApplicationModule
+import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 
-
+@HiltAndroidApp
 class CurrencyConverterApplication : Application() {
-    lateinit var applicationComponent: ApplicationComponent
 
     @Inject
     lateinit var currencyDatabase: CurrencyDatabase
@@ -23,21 +20,13 @@ class CurrencyConverterApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         application = this;
-        injectDependencies()
-
         currencyDatabase?.let {
             Log.i(TAG, "Database object is injected")
         }
 
     }
 
-    private fun injectDependencies() {
-        applicationComponent = DaggerApplicationComponent
-            .builder()
-            .applicationModule(ApplicationModule(this))
-            .build()
-        applicationComponent.inject(this)
-    }
+
 
     companion object {
         val TAG: String? = CurrencyConverterApplication::class.simpleName

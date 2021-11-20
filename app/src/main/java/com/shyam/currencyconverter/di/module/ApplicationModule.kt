@@ -1,36 +1,39 @@
 package com.shyam.currencyconverter.di.module
 
-import android.app.Application
 import android.content.Context
 import com.shyam.currencyconverter.CurrencyConverterApplication
-import com.shyam.currencyconverter.data.repository.CurrencyRatesRepository
-import com.shyam.currencyconverter.data.repository.CurrencyRatesRepositoryImpl
-import com.shyam.currencyconverter.data.source.CurrencyDataSource
-import com.shyam.currencyconverter.data.source.local.CurrencyLocalDataSource
 import com.shyam.currencyconverter.data.source.local.database.CurrencyDatabase
-import com.shyam.currencyconverter.data.source.remote.CurrencyRemoteDataSource
 import com.shyam.currencyconverter.data.source.remote.network.CurrencyLayerApiInterface
 import com.shyam.currencyconverter.data.source.remote.network.RetrofitClient
-import com.shyam.currencyconverter.di.scope.ActivityScope
 import com.shyam.currencyconverter.util.NetworkConnectionChecker
 import com.shyam.currencyconverter.util.NetworkConnectionCheckerImpl
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ApplicationComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Singleton
 
+@InstallIn(ApplicationComponent::class)
 @Module
-class ApplicationModule(private val application: CurrencyConverterApplication) {
+class ApplicationModule {
+
+    @Singleton
+    @Provides
+    fun provideApplication(@ApplicationContext app: Context): CurrencyConverterApplication {
+        return app as CurrencyConverterApplication
+    }
+
+    @Singleton
+    @Provides
+    fun provideContext(@ApplicationContext context: Context): Context {
+        return context
+    }
+
 
     @Provides
     @Singleton
-    fun providesApplication(): Application = application;
-
-    @Provides
-    fun providesAppContext(): Context = application;
-
-    @Provides
-    @Singleton
-    fun providesDatabase(): CurrencyDatabase = CurrencyDatabase.invoke(application)
+    fun providesDatabase(application: CurrencyConverterApplication): CurrencyDatabase = CurrencyDatabase.invoke(application)
 
     @Provides
     @Singleton
@@ -39,8 +42,9 @@ class ApplicationModule(private val application: CurrencyConverterApplication) {
 
     @Provides
     @Singleton
-    fun providesNetworkChecker(): NetworkConnectionChecker =
+    fun providesNetworkChecker(application:CurrencyConverterApplication): NetworkConnectionChecker =
         NetworkConnectionCheckerImpl(application)
+
 
 
 }
