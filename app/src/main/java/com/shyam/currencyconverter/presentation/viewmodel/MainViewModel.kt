@@ -17,8 +17,7 @@ import com.shyam.currencyconverter.util.NetworkConnectionChecker
 import kotlinx.coroutines.*
 import java.math.BigDecimal
 
-
-public class MainViewModel @ViewModelInject public constructor(
+class MainViewModel @ViewModelInject constructor(
     private val networkConnectionChecker: NetworkConnectionChecker,
     private val convertCurrencyUseCase: ConvertCurrencyUseCase,
     private val currencyListUseCase: CurrencyListUseCase
