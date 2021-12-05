@@ -1,7 +1,6 @@
 package com.shyam.currencyconverter.domain.usecases
 
 import android.util.Log
-import com.shyam.currencyconverter.CurrencyConverterApplication
 import com.shyam.currencyconverter.data.repository.CurrencyRatesRepository
 import com.shyam.currencyconverter.data.repository.CurrencyRatesRepositoryImpl
 import com.shyam.currencyconverter.data.repository.Result

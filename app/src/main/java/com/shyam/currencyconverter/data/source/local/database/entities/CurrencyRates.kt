@@ -8,5 +8,5 @@ import java.math.BigDecimal
 data class CurrencyRates(
     @PrimaryKey val base: String,
     val timestamp: Long,
-    val rates: Map<String, BigDecimal>
+    var rates: Map<String, BigDecimal>
 )

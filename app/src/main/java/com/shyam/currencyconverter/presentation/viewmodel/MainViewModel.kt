@@ -7,11 +7,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shyam.currencyconverter.core.Event
+import com.shyam.currencyconverter.data.repository.CurrencyRatesRepository
+import com.shyam.currencyconverter.data.repository.Result
+import com.shyam.currencyconverter.data.source.local.database.entities.CurrencyList
 import com.shyam.currencyconverter.domain.UseCase.UseCaseCallback
 import com.shyam.currencyconverter.domain.extensions.convertToCurrencyConversionItemList
-import com.shyam.currencyconverter.domain.extensions.convertToCurrencyListString
 import com.shyam.currencyconverter.domain.usecases.ConvertCurrencyUseCase
-import com.shyam.currencyconverter.domain.usecases.CurrencyListUseCase
 import com.shyam.currencyconverter.presentation.adapter.CurrencyConversionItem
 import com.shyam.currencyconverter.util.NetworkConnectionChecker
 import kotlinx.coroutines.*
@@ -20,7 +21,7 @@ import java.math.BigDecimal
 class MainViewModel @ViewModelInject constructor(
     private val networkConnectionChecker: NetworkConnectionChecker,
     private val convertCurrencyUseCase: ConvertCurrencyUseCase,
-    private val currencyListUseCase: CurrencyListUseCase
+    private val repository: CurrencyRatesRepository
     ) : ViewModel() {
 
 
@@ -83,31 +84,39 @@ class MainViewModel @ViewModelInject constructor(
         viewModelScope.launch {
             withContext(Dispatchers.IO){
 
-                currencyListUseCase.apply {
+                val currencyListResponse = repository.getCurrencyList(true,isNetworkConnected);
+                when( currencyListResponse.status){
+                   Result.Status.SUCCESS -> {
+                       Log.d(TAG, "onSuccess")
+                       currencyListResponse.data?.let{
+                           val currencyListItems = convertToCurrencyListString(it)
+                           _currencyListData.postValue(currencyListItems)
+                           this@MainViewModel._currencyMapLiveData.postValue(it.currencies)
+                       }
 
-                    this.useCaseCallback =
-                        object : UseCaseCallback<CurrencyListUseCase.GetCurrencyListResponse> {
-                            override fun onSuccess(response: CurrencyListUseCase.GetCurrencyListResponse) {
-                                Log.d(TAG, "onSuccess")
-                                val currencyListItems = response.convertToCurrencyListString()
-                                _currencyListData.postValue(currencyListItems)
-                                this@MainViewModel._currencyMapLiveData.postValue(response.output?.currencies)
-                            }
+                   }
+                   Result.Status.ERROR -> {
+                       Log.d(TAG, "onError")
+                       Log.d(TAG, currencyListResponse.message?:"")
+                   }
+                   else -> {
 
-                            override fun onError(t: Throwable) {
-                                Log.d(TAG, "onError")
-                                Log.d(TAG, t.message as String)
-                            }
-                        }
-                }
-                currencyListUseCase.executeUseCase(
-                    CurrencyListUseCase.GetCurrencyListRequest(isNetworkConnected)
-                )
+                   }
+               }
             }
 
         }
     }
 
+    private fun convertToCurrencyListString(list: CurrencyList): List<String> {
+        val outputList = mutableListOf<String>()
+        val myMap = list.currencies
+        val myMapIterator = myMap?.iterator()
+        myMapIterator?.forEach {
+            outputList.add(it.key)
+        }
+        return outputList
+    }
 
     /**
      * Heavy operation that cannot be done in the Main Thread

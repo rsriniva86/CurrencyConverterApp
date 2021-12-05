@@ -1,7 +1,7 @@
 package com.shyam.currencyconverter.domain.extensions
 
+import com.shyam.currencyconverter.data.source.local.database.entities.CurrencyList
 import com.shyam.currencyconverter.domain.usecases.ConvertCurrencyUseCase
-import com.shyam.currencyconverter.domain.usecases.CurrencyListUseCase
 import com.shyam.currencyconverter.presentation.adapter.CurrencyConversionItem
 import java.math.BigDecimal
 
@@ -15,14 +15,4 @@ fun ConvertCurrencyUseCase.ConvertCurrencyResponse.convertToCurrencyConversionIt
     }
     return outputList
 
-}
-
-fun CurrencyListUseCase.GetCurrencyListResponse.convertToCurrencyListString(): List<String> {
-    val outputList = mutableListOf<String>()
-    val myMap = this.output?.currencies
-    val myMapIterator = myMap?.iterator()
-    myMapIterator?.forEach {
-        outputList.add("${it.key}")
-    }
-    return outputList
 }
